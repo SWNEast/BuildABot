@@ -8,41 +8,66 @@ public class PlayerMovement : MonoBehaviour
     
     public float movementSpeed;
     public Rigidbody2D rb;
-    public SpriteRenderer spriteRenderer;
-    public Sprite[] spriteArray;
     public float jumpForce = 10f;
     public TextMeshProUGUI deathText;
+    public SpriteRenderer bodyRenderer;
+    public Sprite[] bodySprites;
+    public SpriteRenderer armsRenderer;
+    public Sprite[] armSprites;
+    public SpriteRenderer legsRenderer;
+    public Sprite[] legSprites;
 
     private float mx;
-    private BoxCollider2D boxCollider;
+    private float my;
+    private Vector2 lastCheckpoint = new Vector2(-5,-5);
 
 
     private bool isGrounded = false;
     private bool canMove = true;
+    private bool hasLegs = false;
+    private bool hasKnees = false;
+    private bool hasArms = false;
+    private bool canClimb = false;
 
     private void Start()
     {
-        spriteRenderer.sprite = spriteArray[0];
-        boxCollider = gameObject.AddComponent<BoxCollider2D>();
+        bodyRenderer.sprite = bodySprites[0];
+        bodyRenderer.gameObject.AddComponent<BoxCollider2D>();
         deathText.gameObject.SetActive(false);
     }
 
     private void Update()
     {
+        if (rb.velocity.x < 0)
+        {
+            FaceLeft();
+        } else if (rb.velocity.x > 0)
+        {
+            FaceRight();
+        }
+
+
         if (canMove)
         {
             mx = Input.GetAxis("Horizontal");
 
-            if (Input.GetButtonDown("Jump") && isGrounded)
+            if (Input.GetButtonDown("Jump") && isGrounded && hasKnees)
             {
                 Jump();
             }
+        }
+        if (canClimb)
+        {
+            my = Input.GetAxis("Vertical");
         }
     }
 
     private void FixedUpdate()
     {
-        if (canMove)
+        if (canMove && canClimb) {
+            Vector2 movement = new Vector2(mx * movementSpeed, my * movementSpeed);
+            rb.velocity = movement;
+        } else if (canMove)
         {
             Vector2 movement = new Vector2(mx * movementSpeed, rb.velocity.y);
             rb.velocity = movement;
@@ -56,8 +81,9 @@ public class PlayerMovement : MonoBehaviour
             isGrounded = true;
         } else if (collision.gameObject.CompareTag("Spike"))
         {
-            canMove = false;
-            deathText.gameObject.SetActive(true);
+            //canMove = false;
+            //deathText.gameObject.SetActive(true);
+            transform.position = new Vector2(lastCheckpoint.x, lastCheckpoint.y+5);
         }
     }
 
@@ -71,8 +97,32 @@ public class PlayerMovement : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.CompareTag("Stair Trigger")){
-            StartCoroutine(UnlockStairs());
+        GameObject go = collision.gameObject;
+        if (go.CompareTag("Leg Pickup")){
+            StartCoroutine(GiveLegs());
+            go.SetActive(false);
+        } else if (go.CompareTag("Checkpoint"))
+        {
+            lastCheckpoint = go.transform.position;
+        } else if (go.CompareTag("Ladder") && hasArms)
+        {
+            canClimb = true;
+        } else if (go.CompareTag("Knee Pickup"))
+        {
+            go.SetActive(false);
+            hasKnees = true;
+        } else if (go.CompareTag("Arm Pickup"))
+        {
+            go.SetActive(false);
+            hasArms = true;
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.gameObject.CompareTag("Ladder"))
+        {
+            canClimb = false;
         }
     }
 
@@ -83,126 +133,31 @@ public class PlayerMovement : MonoBehaviour
         rb.velocity = movement;
     }
 
-    IEnumerator UnlockStairs()
+    IEnumerator GiveLegs()
     {
         yield return new WaitForSeconds(5);
+        hasLegs = true;
         GameObject.FindGameObjectWithTag("Stair Block").SetActive(false);
-    }
-    /*LEGACY CODE FROM PROOF OF CONCEPT PROTOTYPE. DELETE WHEN READY.
-    public float movementSpeed;
-    public Rigidbody2D rb;
-
-    public SpriteRenderer spriteRenderer;
-    public Sprite[] spriteArray;
-
-    public TextMeshProUGUI legText;
-    public TextMeshProUGUI foundText;
-
-    public float jumpForce = 20f;
-    public Transform feet;
-    public LayerMask groundLayers;
-
-
-    private BoxCollider2D boxCollider;
-    private float mx;
-    private bool IsGrounded = false;
-    private bool canMove = true;
-
-    private bool HasLegs = false;
-
-
-    private void Start()
-    {
-        spriteRenderer.sprite = spriteArray[0];
-        boxCollider = gameObject.AddComponent<BoxCollider2D>();
-        foundText.gameObject.SetActive(false);
+        legsRenderer.sprite = legSprites[0];
+        legsRenderer.gameObject.AddComponent<BoxCollider2D>();
+        gameObject.transform.position = new Vector2(gameObject.transform.position.x, gameObject.transform.position.y + 5);
     }
 
-
-    private void Update()
+    void FaceRight()
     {
-        if (canMove)
+        bodyRenderer.sprite = bodySprites[0];
+        if (hasArms)
         {
-            mx = Input.GetAxis("Horizontal");
-
-            if (Input.GetButtonDown("Jump") && CanJump())
-            {
-                Jump();
-            }
+            armsRenderer.sprite = armSprites[0];
         }
     }
 
-    private void FixedUpdate()
+    void FaceLeft()
     {
-        if (canMove)
+        bodyRenderer.sprite = bodySprites[1];
+        if (hasArms)
         {
-            Vector2 movement = new Vector2(mx * movementSpeed, rb.velocity.y);
-
-            rb.velocity = movement;
+            armsRenderer.sprite = armSprites[1];
         }
     }
-
-    void Jump()
-    {
-        Vector2 movement = new Vector2(rb.velocity.x, jumpForce);
-
-        rb.velocity = movement;
-    }
-
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        if (collision.gameObject.tag == "Ground")
-        {
-            IsGrounded = true;
-        }
-    }
-
-    private void OnCollisionExit2D(Collision2D collision)
-    {
-        if (collision.gameObject.tag == "Ground")
-        {
-            IsGrounded = false;
-        }
-    }
-
-    private IEnumerator OnTriggerEnter2D(Collider2D collision)
-    {
-        if (collision.gameObject.CompareTag("Legs"))
-        {
-            HasLegs = true;
-            collision.gameObject.SetActive(false);
-            StartCoroutine(ShowMessage("legs", 5));
-            legText.text = "Has Legs";
-            spriteRenderer.sprite = spriteArray[2];
-            canMove = false;
-            rb.velocity = new Vector2(0, 0);
-            transform.position = new Vector2(rb.position.x, rb.position.y + 5);
-            rb.isKinematic = true;
-            yield return new WaitForSeconds(2);
-            rb.isKinematic = false;
-            canMove = true;
-            
-            spriteRenderer.sprite = spriteArray[1];
-            ResetCollider();
-        }
-    }
-
-    bool CanJump()
-    {
-        return IsGrounded && HasLegs;
-    }
-
-    IEnumerator ShowMessage(string message, float delay)
-    {
-        foundText.text = "You found some " + message + "!";
-        foundText.gameObject.SetActive(true);
-        yield return new WaitForSeconds(delay);
-        foundText.gameObject.SetActive(false);
-    }
-    
-    void ResetCollider()
-    {
-        boxCollider = null;
-        boxCollider = gameObject.AddComponent<BoxCollider2D>();
-    }*/
 }

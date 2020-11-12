@@ -6,6 +6,16 @@ TagManager:
   tags:
   - Ground
   - Legs
+  - Spike
+  - Stair Block
+  - Ladder
+  - Checkpoint
+  - Teleport
+  - Body
+  - Arms
+  - Leg Pickup
+  - Knee Pickup
+  - Arm Pickup
   layers:
   - Default
   - TransparentFX
@@ -16,7 +26,7 @@ TagManager:
   - 
   - 
   - Ground
-  - 
+  - CameraBounds
   - 
   - 
   - 
