@@ -149,6 +149,7 @@ public class PlayerMovement : MonoBehaviour
         if (hasArms)
         {
             armsRenderer.sprite = armSprites[0];
+            armsRenderer.gameObject.transform.localPosition = new Vector2(0.03f, - 0.01f);
         }
     }
 
@@ -158,6 +159,7 @@ public class PlayerMovement : MonoBehaviour
         if (hasArms)
         {
             armsRenderer.sprite = armSprites[1];
+            armsRenderer.gameObject.transform.localPosition = new Vector2(-0.03f, - 0.01f);
         }
     }
 }

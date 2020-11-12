@@ -10,29 +10,27 @@ public class Teleport : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.W)){
-            teleportEnabled = true;
-        } else
-        {
-            teleportEnabled = false;
-        }
+        if ((Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.W)) && teleportEnabled) { 
+            GameObject.FindGameObjectWithTag("Player").transform.position = receiver.transform.position;
+        } 
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
         GameObject go = collision.gameObject;
-        if((go.CompareTag("Body") || go.CompareTag("Legs")) && teleportEnabled)
+        if (go.CompareTag("Body") || go.CompareTag("Legs"))
         {
-            GameObject.FindGameObjectWithTag("Player").transform.position = receiver.transform.position;
+            teleportEnabled = true;
         }
+
     }
 
-    private void OnTriggerStay2D(Collider2D collision)
+    private void OnTriggerExit2D(Collider2D collision)
     {
         GameObject go = collision.gameObject;
-        if ((go.CompareTag("Body") || go.CompareTag("Legs")) && teleportEnabled)
+        if (go.CompareTag("Body") || go.CompareTag("Legs"))
         {
-            GameObject.FindGameObjectWithTag("Player").transform.position = receiver.transform.position;
+            teleportEnabled = false;
         }
     }
 }
