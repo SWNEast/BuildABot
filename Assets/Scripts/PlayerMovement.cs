@@ -110,11 +110,12 @@ public class PlayerMovement : MonoBehaviour
             canClimb = true;
         } else if (go.CompareTag("Knee Pickup"))
         {
+            inventory.foundItem(3);
             go.SetActive(false);
             hasKnees = true;
         } else if (go.CompareTag("Arm Pickup"))
         {
-            inventory.foundItem(3);
+            inventory.foundItem(5);
             go.SetActive(false);
             hasArms = true;
         }

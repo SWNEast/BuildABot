@@ -49,16 +49,11 @@ public class UIItem : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler,
     }
 
     public void OnPointerEnter(PointerEventData eventData) {
-        Debug.Log("Entered Item");
-        if (this.item != null) {
+        if (this.item != null)
             tooltip.GenerateTooltip(this.item);
-        }
-        
     }
 
     public void OnPointerExit(PointerEventData eventData) {
-        Debug.Log("Exited Item");
         tooltip.gameObject.SetActive(false);
-        
     }
 }

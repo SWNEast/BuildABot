@@ -14,7 +14,7 @@ public class Tooltip : MonoBehaviour
     }
 
     public void GenerateTooltip(Item item) {
-        string tooltip = item.title + "\n" + item.description;
+        string tooltip = item.title + "\n\n" + item.description;
         this.tooltip.text = tooltip;
         gameObject.SetActive(true);
         this.tooltip.gameObject.SetActive(true);
