@@ -5,13 +5,27 @@ using UnityEngine;
 public class UIInventory : MonoBehaviour {
     public List<UIItem> uiItems = new List<UIItem>();
     public GameObject slotPrefab;
-    public Transform slotPanel;
+    public Transform invPanel;
+    public Transform storagePanel;
+    public Transform charPanel;
     private int noSlots = 20;
 
     private void Awake() {
-        for (int i = 0; i < noSlots; i++) {
+        for (int i = 0; i < 15; i++) {
             GameObject instance = Instantiate(slotPrefab);
-            instance.transform.SetParent(slotPanel);
+            instance.transform.SetParent(storagePanel);
+            uiItems.Add(instance.GetComponentInChildren<UIItem>());
+        }
+        for (int i = 0; i < 3; i++) {
+
+            GameObject instance = Instantiate(slotPrefab);
+            instance.transform.SetParent(invPanel);
+            uiItems.Add(instance.GetComponentInChildren<UIItem>());
+        }
+        
+        for (int i = 0; i < 3; i++) {
+            GameObject instance = Instantiate(slotPrefab);
+            instance.transform.SetParent(charPanel);
             uiItems.Add(instance.GetComponentInChildren<UIItem>());
         }
     }
@@ -26,5 +40,10 @@ public class UIInventory : MonoBehaviour {
 
     public void RemoveItem(Item item) {
         UpdateSlot(uiItems.FindIndex(i => i.item == item), null);
+    }
+
+    public void ReplaceItem(Item oldItem, Item newItem) {
+        UpdateSlot(uiItems.FindIndex(i => i.item == oldItem), newItem);
+
     }
 }

@@ -31,28 +31,34 @@ public class UIItem : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler,
 
     // Method runs if the item is clicked
     public void OnPointerClick(PointerEventData eventData) {
-        if (this.item != null) {                                // If the player clicks on an actual item:
-            if (selectedItem.item != null) {                        // If there was already a selected item, clone it and replace it with the item clicked on
-                Item clone = new Item(selectedItem.item); 
-                selectedItem.UpdateItem(this.item);
-                UpdateItem(clone);                                  // Puts the cloned item in the place of where the old item used to be
-            } else {
-                selectedItem.UpdateItem(this.item);             // If there wasn't a selected item, just select this item and replace it with nothing
-                UpdateItem(null);
+            if (this.item != null) {                                // If the player clicks on an actual item:
+            if (this.item.id % 2 != 0) {
+                if (selectedItem.item != null) {                        // If there was already a selected item, clone it and replace it with the item clicked on
+                    Item clone = new Item(selectedItem.item); 
+                    selectedItem.UpdateItem(this.item);
+                    UpdateItem(clone);                                  // Puts the cloned item in the place of where the old item used to be
+                } else {
+                    selectedItem.UpdateItem(this.item);             // If there wasn't a selected item, just select this item and replace it with nothing
+                    UpdateItem(null);
+                }
             }
-        } else if (selectedItem.item != null) {                 // If there was no item in the slot, drop the selected item in said place
-            UpdateItem(selectedItem.item);
-            selectedItem.UpdateItem(null);
-        }
+            } else if (selectedItem.item != null) {                 // If there was no item in the slot, drop the selected item in said place
+                UpdateItem(selectedItem.item);
+                selectedItem.UpdateItem(null);
+            }
     }
 
     public void OnPointerEnter(PointerEventData eventData) {
+        Debug.Log("Entered Item");
         if (this.item != null) {
             tooltip.GenerateTooltip(this.item);
         }
+        
     }
 
     public void OnPointerExit(PointerEventData eventData) {
+        Debug.Log("Exited Item");
         tooltip.gameObject.SetActive(false);
+        
     }
 }

@@ -21,7 +21,9 @@ public class Inventory : MonoBehaviour {
         if (toRemove != null) {
             characterItems.Remove(toRemove);
             Debug.Log("Removed item " + toRemove.title);
-            inventoryUI.RemoveItem(toRemove);
+            Item found = checkForItem(id);
+            if (found != null) { inventoryUI.ReplaceItem(toRemove, found); }
+            else { inventoryUI.RemoveItem(toRemove); }
         }
         giveItem(id); 
         
