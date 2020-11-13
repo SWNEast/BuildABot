@@ -14,7 +14,6 @@ public class Inventory : MonoBehaviour {
         giveItem(0);
         giveItem(2);
         giveItem(4);
-        foundItem(1);
     }
 
     // Takes the locked item out the player's inventory, gives the proper item

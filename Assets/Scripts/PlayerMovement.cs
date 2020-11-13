@@ -16,7 +16,7 @@ public class PlayerMovement : MonoBehaviour
     public Sprite[] armSprites;
     public SpriteRenderer legsRenderer;
     public Sprite[] legSprites;
-
+    public Inventory inventory;
     private float mx;
     private float my;
     private Vector2 lastCheckpoint = new Vector2(-5,-5);
@@ -100,6 +100,7 @@ public class PlayerMovement : MonoBehaviour
         GameObject go = collision.gameObject;
         if (go.CompareTag("Leg Pickup")){
             StartCoroutine(GiveLegs());
+            inventory.foundItem(1);
             go.SetActive(false);
         } else if (go.CompareTag("Checkpoint"))
         {
@@ -113,6 +114,7 @@ public class PlayerMovement : MonoBehaviour
             hasKnees = true;
         } else if (go.CompareTag("Arm Pickup"))
         {
+            inventory.foundItem(3);
             go.SetActive(false);
             hasArms = true;
         }
