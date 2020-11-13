@@ -6,9 +6,11 @@ public class Inventory : MonoBehaviour {
     public List<Item> characterItems = new List<Item>();
     public ItemDatabase itemList;
     public UIInventory inventoryUI;
+    public Transform panel;
 
     private void Start() {
         inventoryUI.gameObject.SetActive(false);
+        panel.gameObject.SetActive(false);
         giveItem(0);
         giveItem(2);
         giveItem(4);
@@ -42,7 +44,9 @@ public class Inventory : MonoBehaviour {
     }
 
     public void Update() {
-        if (Input.GetKeyDown(KeyCode.I))
+        if (Input.GetKeyDown(KeyCode.I)) {
             inventoryUI.gameObject.SetActive(!inventoryUI.gameObject.activeSelf);
+            panel.gameObject.SetActive(!panel.gameObject.activeSelf);
+        }
     }
 }
