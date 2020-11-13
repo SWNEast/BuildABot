@@ -12,6 +12,7 @@ public class Inventory : MonoBehaviour {
         giveItem(0);
         giveItem(2);
         giveItem(4);
+        foundItem(1);
     }
 
     // Takes the locked item out the player's inventory, gives the proper item
@@ -20,7 +21,9 @@ public class Inventory : MonoBehaviour {
         if (toRemove != null) {
             characterItems.Remove(toRemove);
             Debug.Log("Removed item " + toRemove.title);
-            inventoryUI.RemoveItem(toRemove);
+            Item found = checkForItem(id);
+            if (found != null) { inventoryUI.ReplaceItem(toRemove, found); }
+            else { inventoryUI.RemoveItem(toRemove); }
         }
         giveItem(id); 
         

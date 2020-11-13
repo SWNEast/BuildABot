@@ -31,8 +31,8 @@ public class UIItem : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler,
 
     // Method runs if the item is clicked
     public void OnPointerClick(PointerEventData eventData) {
-        if (this.item.id % 2 != 0) {
             if (this.item != null) {                                // If the player clicks on an actual item:
+            if (this.item.id % 2 != 0) {
                 if (selectedItem.item != null) {                        // If there was already a selected item, clone it and replace it with the item clicked on
                     Item clone = new Item(selectedItem.item); 
                     selectedItem.UpdateItem(this.item);
@@ -41,11 +41,11 @@ public class UIItem : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler,
                     selectedItem.UpdateItem(this.item);             // If there wasn't a selected item, just select this item and replace it with nothing
                     UpdateItem(null);
                 }
+            }
             } else if (selectedItem.item != null) {                 // If there was no item in the slot, drop the selected item in said place
                 UpdateItem(selectedItem.item);
                 selectedItem.UpdateItem(null);
             }
-        }
     }
 
     public void OnPointerEnter(PointerEventData eventData) {
