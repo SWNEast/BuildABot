@@ -7,28 +7,27 @@ public class Inventory : MonoBehaviour {
     public ItemDatabase itemList;
     public UIInventory inventoryUI;
     public Transform panel;
+    public Transform invOpenBtn;
+    public Transform invCloseBtn;
 
     private void Start() {
         inventoryUI.gameObject.SetActive(false);
         panel.gameObject.SetActive(false);
-        giveItem(0);
-        giveItem(2);
-        giveItem(4);
-        foundItem(1);
+        for (int i=0; i<itemList.items.Count; i++) {
+            if (i % 2 == 0) { giveItem(i); }
+        }
     }
 
     // Takes the locked item out the player's inventory, gives the proper item
     public void foundItem(int id) {
         Item toRemove = checkForItem(id-1);
+        Item found = itemList.items[id];
         if (toRemove != null) {
             characterItems.Remove(toRemove);
             Debug.Log("Removed item " + toRemove.title);
-            Item found = checkForItem(id);
             if (found != null) { inventoryUI.ReplaceItem(toRemove, found); }
             else { inventoryUI.RemoveItem(toRemove); }
-        }
-        giveItem(id); 
-        
+        }        
     }
 
     // Gives the player an item based off the item id
@@ -47,6 +46,8 @@ public class Inventory : MonoBehaviour {
         if (Input.GetKeyDown(KeyCode.I)) {
             inventoryUI.gameObject.SetActive(!inventoryUI.gameObject.activeSelf);
             panel.gameObject.SetActive(!panel.gameObject.activeSelf);
+            invOpenBtn.gameObject.SetActive(!invOpenBtn.gameObject.activeSelf);
+            invCloseBtn.gameObject.SetActive(!invCloseBtn.gameObject.activeSelf);
         }
     }
 }

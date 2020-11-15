@@ -21,6 +21,7 @@ public class PlayerMovement : MonoBehaviour
     private float my;
     private Vector2 lastCheckpoint = new Vector2(-5,-5);
 
+    public Inventory inventory;
 
     private bool isGrounded = false;
     private bool canMove = true;
@@ -101,6 +102,7 @@ public class PlayerMovement : MonoBehaviour
         if (go.CompareTag("Leg Pickup")){
             StartCoroutine(GiveLegs());
             go.SetActive(false);
+            inventory.foundItem(1);
         } else if (go.CompareTag("Checkpoint"))
         {
             lastCheckpoint = go.transform.position;
@@ -109,10 +111,12 @@ public class PlayerMovement : MonoBehaviour
             canClimb = true;
         } else if (go.CompareTag("Knee Pickup"))
         {
+            inventory.foundItem(3);
             go.SetActive(false);
             hasKnees = true;
         } else if (go.CompareTag("Arm Pickup"))
         {
+            inventory.foundItem(5);
             go.SetActive(false);
             hasArms = true;
         }
