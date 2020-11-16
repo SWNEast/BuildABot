@@ -109,6 +109,7 @@ public class PlayerMovement : MonoBehaviour
         if (go.CompareTag("Leg Pickup")){
             StartCoroutine(GiveLegs());
             legsTut.gameObject.SetActive(true);
+            canMove = false;
             go.SetActive(false);
             inventory.foundItem(2);
         } else if (go.CompareTag("Checkpoint"))
@@ -120,12 +121,14 @@ public class PlayerMovement : MonoBehaviour
         } else if (go.CompareTag("Knee Pickup"))
         {
             springsTut.gameObject.SetActive(true);
+            canMove = false;
             go.SetActive(false);
             hasKnees = true;
             inventory.foundItem(14);
         } else if (go.CompareTag("Arm Pickup"))
         {
             armsTut.gameObject.SetActive(true);
+            canMove = false;
             go.SetActive(false);
             hasArms = true;
             inventory.foundItem(4);
@@ -175,5 +178,9 @@ public class PlayerMovement : MonoBehaviour
             armsRenderer.sprite = armSprites[1];
             armsRenderer.gameObject.transform.localPosition = new Vector2(-0.03f, - 0.01f);
         }
+    }
+
+    public void setMovement(bool canMove) {
+        this.canMove = canMove;
     }
 }
