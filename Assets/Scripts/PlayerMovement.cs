@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using System;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -29,12 +30,18 @@ public class PlayerMovement : MonoBehaviour
     private bool hasKnees = false;
     private bool hasArms = false;
     private bool canClimb = false;
+    public Transform legsTut;
+    public Transform springsTut;
+    public Transform armsTut;
 
     private void Start()
     {
         bodyRenderer.sprite = bodySprites[0];
         bodyRenderer.gameObject.AddComponent<BoxCollider2D>();
         deathText.gameObject.SetActive(false);
+        legsTut.gameObject.SetActive(false);
+        springsTut.gameObject.SetActive(false);
+        armsTut.gameObject.SetActive(false);
     }
 
     private void Update()
@@ -101,8 +108,9 @@ public class PlayerMovement : MonoBehaviour
         GameObject go = collision.gameObject;
         if (go.CompareTag("Leg Pickup")){
             StartCoroutine(GiveLegs());
+            legsTut.gameObject.SetActive(true);
             go.SetActive(false);
-            inventory.foundItem(1);
+            inventory.foundItem(2);
         } else if (go.CompareTag("Checkpoint"))
         {
             lastCheckpoint = go.transform.position;
@@ -111,14 +119,16 @@ public class PlayerMovement : MonoBehaviour
             canClimb = true;
         } else if (go.CompareTag("Knee Pickup"))
         {
-            inventory.foundItem(3);
+            springsTut.gameObject.SetActive(true);
             go.SetActive(false);
             hasKnees = true;
+            inventory.foundItem(14);
         } else if (go.CompareTag("Arm Pickup"))
         {
-            inventory.foundItem(5);
+            armsTut.gameObject.SetActive(true);
             go.SetActive(false);
             hasArms = true;
+            inventory.foundItem(4);
         }
     }
 

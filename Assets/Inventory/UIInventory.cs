@@ -6,14 +6,32 @@ public class UIInventory : MonoBehaviour {
     public List<UIItem> uiItems = new List<UIItem>();
     public GameObject slotPrefab;
     public Transform invPanel;
-    public Transform storagePanel;
+    public Transform storagePanelParent;
+    public Transform storagePanelBody;
+    public Transform storagePanelLegs;
+    public Transform storagePanelArms;
     public Transform charPanel;
     private int noSlots = 20;
 
     private void Awake() {
-        for (int i = 0; i < 15; i++) {
+        for (int i = 0; i < 3; i++) {
             GameObject instance = Instantiate(slotPrefab);
-            instance.transform.SetParent(storagePanel);
+            instance.transform.SetParent(storagePanelParent);
+            uiItems.Add(instance.GetComponentInChildren<UIItem>());
+        }
+        for (int i = 0; i < 4; i++) {
+            GameObject instance = Instantiate(slotPrefab);
+            instance.transform.SetParent(storagePanelBody);
+            uiItems.Add(instance.GetComponentInChildren<UIItem>());
+        }
+        for (int i = 0; i < 4; i++) {
+            GameObject instance = Instantiate(slotPrefab);
+            instance.transform.SetParent(storagePanelLegs);
+            uiItems.Add(instance.GetComponentInChildren<UIItem>());
+        }
+        for (int i = 0; i < 4; i++) {
+            GameObject instance = Instantiate(slotPrefab);
+            instance.transform.SetParent(storagePanelArms);
             uiItems.Add(instance.GetComponentInChildren<UIItem>());
         }
         for (int i = 0; i < 3; i++) {

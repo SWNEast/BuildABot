@@ -13,8 +13,9 @@ public class Inventory : MonoBehaviour {
     private void Start() {
         inventoryUI.gameObject.SetActive(false);
         panel.gameObject.SetActive(false);
-        for (int i=0; i<itemList.items.Count; i++) {
-            if (i % 2 == 0) { giveItem(i); }
+        giveItem(0);
+        for (int i=1; i<itemList.items.Count; i++) {
+            if (i % 2 != 0) { giveItem(i); }
         }
     }
 

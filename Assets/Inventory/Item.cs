@@ -7,12 +7,14 @@ public class Item {
     public string title;
     public string description;
     public Sprite icon;
+    public int category;
 
-    public Item(int id, string title, string description, string iconName) {
+    public Item(int id, string title, string description, string iconName, int category) {
         this.id = id;
         this.title = title;
         this.description = description;
         this.icon = Resources.Load<Sprite>("Temp-Images/" + iconName);
+        this.category = category;
     }
 
     public Item(Item item) {

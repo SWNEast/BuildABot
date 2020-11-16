@@ -32,7 +32,7 @@ public class UIItem : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler,
     // Method runs if the item is clicked
     public void OnPointerClick(PointerEventData eventData) {
             if (this.item != null) {                                // If the player clicks on an actual item:
-            if (this.item.id % 2 != 0) {
+            if (this.item.id % 2 == 0 && this.item.id > 4) {
                 if (selectedItem.item != null) {                        // If there was already a selected item, clone it and replace it with the item clicked on
                     Item clone = new Item(selectedItem.item); 
                     selectedItem.UpdateItem(this.item);
