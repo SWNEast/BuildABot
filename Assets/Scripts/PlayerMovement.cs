@@ -6,7 +6,7 @@ using TMPro;
 public class PlayerMovement : MonoBehaviour
 {
     
-    public float movementSpeed;
+    public float baseSpeed;
     public Rigidbody2D rb;
     public float jumpForce = 10f;
     public TextMeshProUGUI tipText;
@@ -21,16 +21,24 @@ public class PlayerMovement : MonoBehaviour
     private float my;
     private Vector2 lastCheckpoint = new Vector2(-5,-5);
 
-
+    private float movementSpeed;
     private bool isGrounded = false;
     private bool canMove = true;
     private bool legsEquipped = false;
     private bool kneesEquipped = false;
+    private bool jumping = false;
     private bool armsEquipped = false;
     private bool canClimb = false;
     private bool magnetsEquipped = false;
     private bool canMagnet = false;
+    private bool wheelsEquipped = false;
+    private float speedBoost = 0;
+    private bool onRamp = false;
+
     
+    
+
+
 
     private void Start()
     {
@@ -49,15 +57,17 @@ public class PlayerMovement : MonoBehaviour
             FaceRight();
         }
 
-        if (isGrounded)
+        if (PlayerIsOnGround())
         {
-            movementSpeed = 7;
+            movementSpeed = baseSpeed + speedBoost;
         } else
         {
-            movementSpeed = 5;
+            movementSpeed = baseSpeed - 2 + speedBoost;
         }
 
+
         
+
         if (canMove)
         {
             mx = Input.GetAxis("Horizontal");
@@ -68,11 +78,28 @@ public class PlayerMovement : MonoBehaviour
 
             if (Input.GetKeyDown(KeyCode.C))
             {
-                if (isGrounded && kneesEquipped)
+                if (kneesEquipped && PlayerIsOnGround())
                 {
-                    Jump();
+                    jumping = true;
+                } 
+            } else if (Input.GetKey(KeyCode.C))
+            {
+                if (wheelsEquipped)
+                {
+                    Sprint(true);
+                }
+            } else if (Input.GetKeyUp(KeyCode.C))
+            {
+                if (kneesEquipped)
+                {
+                    rb.velocity = new Vector2(mx * movementSpeed, rb.velocity.y * 0.5f);
+                } else if (wheelsEquipped)
+                {
+                    Sprint(false);
                 }
             }
+
+            
 
             if (Input.GetKeyDown(KeyCode.X))
             {
@@ -80,9 +107,8 @@ public class PlayerMovement : MonoBehaviour
                 {
                     Magnet();
                 }
-            }
+            } 
         }
-        
     }
 
     private void FixedUpdate()
@@ -95,24 +121,35 @@ public class PlayerMovement : MonoBehaviour
             Vector2 movement = new Vector2(mx * movementSpeed, rb.velocity.y);
             rb.velocity = movement;
         }
+        if (jumping)
+        {
+            Jump();
+        }
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.CompareTag("Ground"))
+        GameObject go = collision.gameObject;
+        if (go.CompareTag("Ground"))
         {
             isGrounded = true;
-        } else if (collision.gameObject.CompareTag("Spike"))
+            onRamp = false;
+        } else if (go.CompareTag("Spike"))
         {
             //canMove = false;
             //deathText.gameObject.SetActive(true);
             transform.position = new Vector2(lastCheckpoint.x, lastCheckpoint.y+5);
         }
+        if (go.CompareTag("Ramp")) 
+        {
+            onRamp = true;
+        }
     }
 
     private void OnCollisionExit2D(Collision2D collision)
     {
-        if (collision.gameObject.CompareTag("Ground"))
+        GameObject go = collision.gameObject;
+        if (go.CompareTag("Ground"))
         {
             isGrounded = false;
         }
@@ -125,11 +162,12 @@ public class PlayerMovement : MonoBehaviour
         {
             legsRenderer.sprite = legSprites[0];
             legsRenderer.gameObject.AddComponent<BoxCollider2D>();
-            gameObject.transform.position = new Vector2(gameObject.transform.position.x, gameObject.transform.position.y + 2);
+            //gameObject.transform.position = new Vector2(gameObject.transform.position.x, gameObject.transform.position.y + 2);
             GameObject.FindGameObjectWithTag("Stair Block").SetActive(false);
             inventory.foundItem(1);
             go.SetActive(false);
             legsEquipped = true;
+            NewItemAnimation();
         } else if (go.CompareTag("Checkpoint"))
         {
             lastCheckpoint = go.transform.position;
@@ -141,18 +179,27 @@ public class PlayerMovement : MonoBehaviour
             inventory.foundItem(3);
             go.SetActive(false);
             kneesEquipped = true;
+            NewItemAnimation();
         } else if (go.CompareTag("Arm Pickup"))
         {
             inventory.foundItem(5);
             go.SetActive(false);
             armsEquipped = true;
+            NewItemAnimation();
         } else if (go.CompareTag("Magnet Pickup"))
         {
             go.SetActive(false);
             magnetsEquipped = true;
+            NewItemAnimation();
         } else if (go.CompareTag("Magnet"))
         {
             canMagnet = true;
+        }
+        else if (go.CompareTag("Wheels Pickup"))
+        {
+            go.SetActive(false);
+            wheelsEquipped = true;
+            NewItemAnimation();
         }
     }
 
@@ -174,11 +221,32 @@ public class PlayerMovement : MonoBehaviour
     void Jump()
     {
         Vector2 movement = new Vector2(rb.velocity.x, jumpForce);
-
         rb.velocity = movement;
+        jumping = false;
+    }
+    
+
+    bool PlayerIsOnGround()
+    {
+        Vector2 startPosition = (Vector2)legsRenderer.transform.position - new Vector2(0f, 0.5f);
+        int layerMask = LayerMask.GetMask("Ground");
+        float laserLength = 0.5f;
+        RaycastHit2D groundCheck1 = Physics2D.Raycast(startPosition + new Vector2(0.6f, 0f), Vector2.down, laserLength, layerMask, 0);
+        RaycastHit2D groundCheck2 = Physics2D.Raycast(startPosition, Vector2.down, laserLength, layerMask, 0);
+        RaycastHit2D groundCheck3 = Physics2D.Raycast(startPosition - new Vector2(0.6f, 0f), Vector2.down, laserLength, layerMask, 0);
+        Debug.DrawRay(startPosition + new Vector2(0.6f, 0f), Vector2.down * laserLength, Color.red);
+        Debug.DrawRay(startPosition, Vector2.down * laserLength, Color.red);
+        Debug.DrawRay(startPosition - new Vector2(0.6f, 0f), Vector2.down * laserLength, Color.red);
+        if ((groundCheck1.collider != null && groundCheck1.collider.gameObject.CompareTag("Ground")) ||
+            (groundCheck2.collider != null && groundCheck2.collider.gameObject.CompareTag("Ground")) ||
+            (groundCheck3.collider != null && groundCheck3.collider.gameObject.CompareTag("Ground")))
+        {
+            return true;
+        } else return false;
+        
     }
 
-    void Magnet() //TODO Fix magnet activation when on floor.
+    void Magnet()
     {
         if (canMagnet)
         {
@@ -193,6 +261,21 @@ public class PlayerMovement : MonoBehaviour
                 rb.velocity = new Vector2(rb.velocity.x, 0.0f);
                 tipText.gameObject.SetActive(true);
             }
+        }
+    }
+
+    void Sprint(bool isSprinting)
+    {
+        if (isSprinting)
+        {
+            speedBoost = baseSpeed;
+        } else
+        {
+            speedBoost = 0;
+        }
+        if (onRamp)
+        {
+            speedBoost = speedBoost * 3;
         }
     }
 
@@ -218,6 +301,6 @@ public class PlayerMovement : MonoBehaviour
 
     void NewItemAnimation()
     {
-        //TODO
+        //transform.position = new Vector2(transform.position.x, transform.position.y + 0.5f);
     }
 }

@@ -19,7 +19,7 @@ TagManager:
   - Magnet Pickup
   - Magnet
   - Ramp
-  - Wheels
+  - Wheels Pickup
   layers:
   - Default
   - TransparentFX
