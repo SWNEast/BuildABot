@@ -16,6 +16,10 @@ TagManager:
   - Leg Pickup
   - Knee Pickup
   - Arm Pickup
+  - Magnet Pickup
+  - Magnet
+  - Ramp
+  - Wheels
   layers:
   - Default
   - TransparentFX

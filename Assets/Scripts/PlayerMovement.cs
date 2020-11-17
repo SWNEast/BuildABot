@@ -9,7 +9,7 @@ public class PlayerMovement : MonoBehaviour
     public float movementSpeed;
     public Rigidbody2D rb;
     public float jumpForce = 10f;
-    public TextMeshProUGUI deathText;
+    public TextMeshProUGUI tipText;
     public SpriteRenderer bodyRenderer;
     public Sprite[] bodySprites;
     public SpriteRenderer armsRenderer;
@@ -24,16 +24,19 @@ public class PlayerMovement : MonoBehaviour
 
     private bool isGrounded = false;
     private bool canMove = true;
-    private bool hasLegs = false;
-    private bool hasKnees = false;
-    private bool hasArms = false;
+    private bool legsEquipped = false;
+    private bool kneesEquipped = false;
+    private bool armsEquipped = false;
     private bool canClimb = false;
+    private bool magnetsEquipped = false;
+    private bool canMagnet = false;
+    
 
     private void Start()
     {
         bodyRenderer.sprite = bodySprites[0];
         bodyRenderer.gameObject.AddComponent<BoxCollider2D>();
-        deathText.gameObject.SetActive(false);
+        tipText.gameObject.SetActive(false);
     }
 
     private void Update()
@@ -46,20 +49,40 @@ public class PlayerMovement : MonoBehaviour
             FaceRight();
         }
 
+        if (isGrounded)
+        {
+            movementSpeed = 7;
+        } else
+        {
+            movementSpeed = 5;
+        }
 
+        
         if (canMove)
         {
             mx = Input.GetAxis("Horizontal");
-
-            if (Input.GetButtonDown("Jump") && isGrounded && hasKnees)
+            if (canClimb)
             {
-                Jump();
+                my = Input.GetAxis("Vertical");
+            }
+
+            if (Input.GetKeyDown(KeyCode.C))
+            {
+                if (isGrounded && kneesEquipped)
+                {
+                    Jump();
+                }
+            }
+
+            if (Input.GetKeyDown(KeyCode.X))
+            {
+                if (magnetsEquipped)
+                {
+                    Magnet();
+                }
             }
         }
-        if (canClimb)
-        {
-            my = Input.GetAxis("Vertical");
-        }
+        
     }
 
     private void FixedUpdate()
@@ -98,35 +121,54 @@ public class PlayerMovement : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collision)
     {
         GameObject go = collision.gameObject;
-        if (go.CompareTag("Leg Pickup")){
-            StartCoroutine(GiveLegs());
+        if (go.CompareTag("Leg Pickup"))
+        {
+            legsRenderer.sprite = legSprites[0];
+            legsRenderer.gameObject.AddComponent<BoxCollider2D>();
+            gameObject.transform.position = new Vector2(gameObject.transform.position.x, gameObject.transform.position.y + 2);
+            GameObject.FindGameObjectWithTag("Stair Block").SetActive(false);
             inventory.foundItem(1);
             go.SetActive(false);
+            legsEquipped = true;
         } else if (go.CompareTag("Checkpoint"))
         {
             lastCheckpoint = go.transform.position;
-        } else if (go.CompareTag("Ladder") && hasArms)
+        } else if (go.CompareTag("Ladder") && armsEquipped)
         {
             canClimb = true;
         } else if (go.CompareTag("Knee Pickup"))
         {
             inventory.foundItem(3);
             go.SetActive(false);
-            hasKnees = true;
+            kneesEquipped = true;
         } else if (go.CompareTag("Arm Pickup"))
         {
             inventory.foundItem(5);
             go.SetActive(false);
-            hasArms = true;
+            armsEquipped = true;
+        } else if (go.CompareTag("Magnet Pickup"))
+        {
+            go.SetActive(false);
+            magnetsEquipped = true;
+        } else if (go.CompareTag("Magnet"))
+        {
+            canMagnet = true;
         }
     }
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if (collision.gameObject.CompareTag("Ladder"))
+        GameObject go = collision.gameObject;
+        if (go.CompareTag("Ladder"))
         {
             canClimb = false;
+        } else if (go.CompareTag("Magnet"))
+        {
+            canMagnet = false;
+            rb.gravityScale = 1.0f;
+            tipText.gameObject.SetActive(false);
         }
+        
     }
 
     void Jump()
@@ -136,20 +178,28 @@ public class PlayerMovement : MonoBehaviour
         rb.velocity = movement;
     }
 
-    IEnumerator GiveLegs()
+    void Magnet() //TODO Fix magnet activation when on floor.
     {
-        yield return new WaitForSeconds(5);
-        hasLegs = true;
-        GameObject.FindGameObjectWithTag("Stair Block").SetActive(false);
-        legsRenderer.sprite = legSprites[0];
-        legsRenderer.gameObject.AddComponent<BoxCollider2D>();
-        gameObject.transform.position = new Vector2(gameObject.transform.position.x, gameObject.transform.position.y + 5);
+        if (canMagnet)
+        {
+            if (rb.gravityScale.Equals(0.0f)) //Magnet on
+            {
+                rb.gravityScale = 1.0f;
+                tipText.gameObject.SetActive(false);
+            }
+            else
+            {
+                rb.gravityScale = 0.0f;
+                rb.velocity = new Vector2(rb.velocity.x, 0.0f);
+                tipText.gameObject.SetActive(true);
+            }
+        }
     }
 
     void FaceRight()
     {
         bodyRenderer.sprite = bodySprites[0];
-        if (hasArms)
+        if (armsEquipped)
         {
             armsRenderer.sprite = armSprites[0];
             armsRenderer.gameObject.transform.localPosition = new Vector2(0.03f, - 0.01f);
@@ -159,10 +209,15 @@ public class PlayerMovement : MonoBehaviour
     void FaceLeft()
     {
         bodyRenderer.sprite = bodySprites[1];
-        if (hasArms)
+        if (armsEquipped)
         {
             armsRenderer.sprite = armSprites[1];
             armsRenderer.gameObject.transform.localPosition = new Vector2(-0.03f, - 0.01f);
         }
+    }
+
+    void NewItemAnimation()
+    {
+        //TODO
     }
 }
