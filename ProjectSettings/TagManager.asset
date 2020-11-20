@@ -14,12 +14,15 @@ TagManager:
   - Body
   - Arms
   - Leg Pickup
-  - Knee Pickup
   - Arm Pickup
   - Magnet Pickup
   - Magnet
   - Ramp
   - Wheels Pickup
+  - Boulder Trigger
+  - Boulder
+  - Boulder Block
+  - Spring Pickup
   layers:
   - Default
   - TransparentFX

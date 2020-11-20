@@ -7,6 +7,8 @@ public class PlayerMovement : MonoBehaviour
 {
     
     public float baseSpeed;
+    public float maxY = 5;
+    public float maxSpeed;
     public Rigidbody2D rb;
     public float jumpForce = 10f;
     public TextMeshProUGUI tipText;
@@ -20,12 +22,13 @@ public class PlayerMovement : MonoBehaviour
     private float mx;
     private float my;
     private Vector2 lastCheckpoint = new Vector2(-5,-5);
+    public float offsetY = 0.316f;
 
     private float movementSpeed;
     private bool isGrounded = false;
     private bool canMove = true;
     private bool legsEquipped = false;
-    private bool kneesEquipped = false;
+    private bool springsEquipped = false;
     private bool jumping = false;
     private bool armsEquipped = false;
     private bool canClimb = false;
@@ -78,7 +81,7 @@ public class PlayerMovement : MonoBehaviour
 
             if (Input.GetKeyDown(KeyCode.C))
             {
-                if (kneesEquipped && PlayerIsOnGround())
+                if (springsEquipped && PlayerIsOnGround())
                 {
                     jumping = true;
                 } 
@@ -90,7 +93,7 @@ public class PlayerMovement : MonoBehaviour
                 }
             } else if (Input.GetKeyUp(KeyCode.C))
             {
-                if (kneesEquipped)
+                if (springsEquipped && rb.velocity.y > 0)
                 {
                     rb.velocity = new Vector2(mx * movementSpeed, rb.velocity.y * 0.5f);
                 } else if (wheelsEquipped)
@@ -118,11 +121,65 @@ public class PlayerMovement : MonoBehaviour
             rb.velocity = movement;
         } else if (canMove)
         {
-            Vector2 movement = new Vector2(mx * movementSpeed, rb.velocity.y);
+            /*if (legsEquipped && PlayerIsOnGround())
+            {
+                Vector2 startPosition = (Vector2)legsRenderer.transform.position - new Vector2(0f, 0.5f);
+                int layerMask = LayerMask.GetMask("Ground");
+                float laserLength = 5f;
+                RaycastHit2D groundCheck = Physics2D.Raycast(startPosition + new Vector2(0.6f, 0f), Vector2.down, laserLength, layerMask, 0);
+                Debug.Log("Estimated position" + (new Vector2(transform.position.x, transform.position.y - groundCheck.distance)));
+                transform.position = new Vector2(transform.position.x, transform.position.y - groundCheck.distance);
+            }*/
+            //Vector2 movement;
+            //if (rb.velocity.y > 1 && !jumping)
+            //{
+            //    movement = new Vector2(mx * movementSpeed, 1);
+
+            //} else
+            //{
+            //    movement = new Vector2(mx * movementSpeed, rb.velocity.y);
+            //}
+            Vector2 movement;
+            if (PlayerIsOnSlope())
+            {
+                if (rb.velocity.y > 1) //Moving up check
+                {
+                    movement = new Vector2(mx * movementSpeed, 1);
+                } else
+                {
+                    movement = new Vector2(mx * movementSpeed, rb.velocity.y);
+                }
+                if (Input.GetAxis("Horizontal") == 0) //Not moving check
+                {
+                    rb.gravityScale = 0f;
+                    movement = new Vector2(mx * movementSpeed, 0);
+                } //else if (rb.velocity.y <= 0 && DistanceToGround() != Vector2.zero) //Moving down check
+                //{
+                //    transform.position = new Vector2(transform.position.x, DistanceToGround().y + offsetY);
+                //}
+                else
+                {
+                    rb.gravityScale = 1f;
+                }
+                
+                
+            } else
+            {
+                if (rb.velocity.y > maxY && !jumping)
+                {
+                    movement = new Vector2(mx * movementSpeed, rb.velocity.y);
+                } else
+                {
+                    movement = new Vector2(mx * movementSpeed, rb.velocity.y);
+                }
+                
+            }
             rb.velocity = movement;
+            Debug.Log(rb.velocity.x);
         }
         if (jumping)
         {
+            rb.gravityScale = 1.0f;
             Jump();
         }
     }
@@ -138,7 +195,11 @@ public class PlayerMovement : MonoBehaviour
         {
             //canMove = false;
             //deathText.gameObject.SetActive(true);
-            transform.position = new Vector2(lastCheckpoint.x, lastCheckpoint.y+5);
+            Die();
+            
+        } else if (go.CompareTag("Boulder"))
+        {
+            Die();
         }
         if (go.CompareTag("Ramp")) 
         {
@@ -153,6 +214,10 @@ public class PlayerMovement : MonoBehaviour
         {
             isGrounded = false;
         }
+        if (go.CompareTag("Ramp"))
+        {
+            onRamp = false;
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -162,7 +227,6 @@ public class PlayerMovement : MonoBehaviour
         {
             legsRenderer.sprite = legSprites[0];
             legsRenderer.gameObject.AddComponent<BoxCollider2D>();
-            //gameObject.transform.position = new Vector2(gameObject.transform.position.x, gameObject.transform.position.y + 2);
             GameObject.FindGameObjectWithTag("Stair Block").SetActive(false);
             inventory.foundItem(1);
             go.SetActive(false);
@@ -174,11 +238,11 @@ public class PlayerMovement : MonoBehaviour
         } else if (go.CompareTag("Ladder") && armsEquipped)
         {
             canClimb = true;
-        } else if (go.CompareTag("Knee Pickup"))
+        } else if (go.CompareTag("Spring Pickup"))
         {
             inventory.foundItem(3);
             go.SetActive(false);
-            kneesEquipped = true;
+            springsEquipped = true;
             NewItemAnimation();
         } else if (go.CompareTag("Arm Pickup"))
         {
@@ -199,7 +263,15 @@ public class PlayerMovement : MonoBehaviour
         {
             go.SetActive(false);
             wheelsEquipped = true;
+            springsEquipped = false; //Delete when merged
             NewItemAnimation();
+        } else if (go.CompareTag("Boulder Trigger"))
+        {
+            if (GameObject.FindGameObjectWithTag("Boulder Block") != null)
+            {
+                GameObject.FindGameObjectWithTag("Boulder Block").SetActive(false);
+            }
+            go.SetActive(false);
         }
     }
 
@@ -246,6 +318,41 @@ public class PlayerMovement : MonoBehaviour
         
     }
 
+    bool PlayerIsOnSlope()
+    {
+        Vector2 startPosition = (Vector2)legsRenderer.transform.position - new Vector2(0f, 0.5f);
+        int layerMask = LayerMask.GetMask("Ground");
+        float laserLength = 1f;
+
+        RaycastHit2D groundCheck = Physics2D.Raycast(startPosition, Vector2.down, laserLength, layerMask, 0);
+        Debug.DrawRay(startPosition, Vector2.down * laserLength, Color.blue);
+        if (groundCheck.collider != null && groundCheck.normal.y < 0.9f)
+        {
+            //Debug.Log(groundCheck.normal);
+            return true;
+        } else
+        {
+            //Debug.Log(groundCheck.normal);
+            return false;
+        }
+    }
+
+    Vector2 DistanceToGround()
+    {
+        Vector2 startPosition = (Vector2)legsRenderer.transform.position - new Vector2(0f, 0.5f);
+        int layerMask = LayerMask.GetMask("Ground");
+        float laserLength = 0.5f;
+
+        RaycastHit2D groundCheck = Physics2D.Raycast(startPosition, Vector2.down, laserLength, layerMask, 0);
+        //Debug.DrawRay(startPosition, Vector2.down * laserLength, Color.blue);
+        if (groundCheck.collider != null)
+        {
+            Debug.Log(groundCheck.distance);
+            return groundCheck.point;
+        }
+        else return new Vector2(0,0);
+    }
+
     void Magnet()
     {
         if (canMagnet)
@@ -269,13 +376,15 @@ public class PlayerMovement : MonoBehaviour
         if (isSprinting)
         {
             speedBoost = baseSpeed;
+            if (onRamp && PlayerIsOnSlope())
+            {
+                rb.gravityScale = 1.0f;
+                Jump();
+                Debug.Log("Jumped");
+            }
         } else
         {
             speedBoost = 0;
-        }
-        if (onRamp)
-        {
-            speedBoost = speedBoost * 3;
         }
     }
 
@@ -302,5 +411,10 @@ public class PlayerMovement : MonoBehaviour
     void NewItemAnimation()
     {
         //transform.position = new Vector2(transform.position.x, transform.position.y + 0.5f);
+    }
+
+    void Die()
+    {
+        transform.position = new Vector2(lastCheckpoint.x, lastCheckpoint.y + 0.5f);
     }
 }

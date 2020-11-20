@@ -9,7 +9,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8186512702558778760}
-  - component: {fileID: 8186512702558778807}
   - component: {fileID: 8186512702558778763}
   - component: {fileID: 8186512702558778761}
   m_Layer: 0
@@ -33,27 +32,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!50 &8186512702558778807
-Rigidbody2D:
-  serializedVersion: 4
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8186512702558778804}
-  m_BodyType: 0
-  m_Simulated: 1
-  m_UseFullKinematicContacts: 0
-  m_UseAutoMass: 0
-  m_Mass: 1
-  m_LinearDrag: 0
-  m_AngularDrag: 0.05
-  m_GravityScale: 1
-  m_Material: {fileID: 6200000, guid: e8937f076e877434cb3b0837f6d9dbdb, type: 2}
-  m_Interpolate: 0
-  m_SleepingMode: 1
-  m_CollisionDetection: 1
-  m_Constraints: 4
 --- !u!114 &8186512702558778763
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -66,14 +44,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 01ce62a37cf4ca54d8cfd9c2ad1c5bdd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movementSpeed: 10
-  rb: {fileID: 8186512702558778807}
-  spriteRenderer: {fileID: 8186512702558778761}
-  spriteArray:
-  - {fileID: 600787656912180804, guid: cc2f8b0cee12b3f418c5df1918ae8762, type: 3}
-  - {fileID: -6573777416417220690, guid: cc2f8b0cee12b3f418c5df1918ae8762, type: 3}
-  - {fileID: 3561037995832689329, guid: cc2f8b0cee12b3f418c5df1918ae8762, type: 3}
+  baseSpeed: 0
+  rb: {fileID: 0}
   jumpForce: 10
+  tipText: {fileID: 0}
+  bodyRenderer: {fileID: 0}
+  bodySprites: []
+  armsRenderer: {fileID: 0}
+  armSprites: []
+  legsRenderer: {fileID: 0}
+  legSprites: []
+  inventory: {fileID: 0}
 --- !u!212 &8186512702558778761
 SpriteRenderer:
   m_ObjectHideFlags: 0
