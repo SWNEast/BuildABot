@@ -9,10 +9,19 @@ public class Inventory : MonoBehaviour {
     public Transform panel;
     public Transform invOpenBtn;
     public Transform invCloseBtn;
+    public Transform optionsMenu;
+    public Transform menu;
+    public AudioSource music;
+    public AudioSource soundEffects;
 
     private void Start() {
+        menu.gameObject.SetActive(false);
         inventoryUI.gameObject.SetActive(false);
         panel.gameObject.SetActive(false);
+        optionsMenu.gameObject.SetActive(false);
+        Debug.Log(PlayerPrefs.GetFloat("MusicVolume"));
+        music.volume = PlayerPrefs.GetFloat("MusicVolume");
+        soundEffects.volume = PlayerPrefs.GetFloat("SEVolume");
         giveItem(0);
         for (int i=1; i<itemList.items.Count; i++) {
             if (i % 2 != 0) { giveItem(i); }
@@ -49,6 +58,20 @@ public class Inventory : MonoBehaviour {
             panel.gameObject.SetActive(!panel.gameObject.activeSelf);
             invOpenBtn.gameObject.SetActive(!invOpenBtn.gameObject.activeSelf);
             invCloseBtn.gameObject.SetActive(!invCloseBtn.gameObject.activeSelf);
+        }
+        if (Input.GetKeyDown(KeyCode.Escape)) {
+            if (inventoryUI.gameObject.activeSelf == false && optionsMenu.gameObject.activeSelf == false) {
+                menu.gameObject.SetActive(!menu.gameObject.activeSelf);
+                panel.gameObject.SetActive(!panel.gameObject.activeSelf);
+            } else if (inventoryUI.gameObject.activeSelf == true) {
+                inventoryUI.gameObject.SetActive(!inventoryUI.gameObject.activeSelf);
+                panel.gameObject.SetActive(!panel.gameObject.activeSelf);
+                invOpenBtn.gameObject.SetActive(!invOpenBtn.gameObject.activeSelf);
+                invCloseBtn.gameObject.SetActive(!invCloseBtn.gameObject.activeSelf);
+            } else if (optionsMenu.gameObject.activeSelf == true) {
+                optionsMenu.gameObject.SetActive(false);
+                panel.gameObject.SetActive(false);
+            }
         }
     }
 }

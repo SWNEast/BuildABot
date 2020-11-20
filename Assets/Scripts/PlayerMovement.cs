@@ -109,6 +109,7 @@ public class PlayerMovement : MonoBehaviour
         if (go.CompareTag("Leg Pickup")){
             StartCoroutine(GiveLegs());
             legsTut.gameObject.SetActive(true);
+            rb.velocity = Vector3.zero;
             canMove = false;
             go.SetActive(false);
             inventory.foundItem(2);
@@ -121,6 +122,7 @@ public class PlayerMovement : MonoBehaviour
         } else if (go.CompareTag("Knee Pickup"))
         {
             springsTut.gameObject.SetActive(true);
+            rb.velocity = Vector3.zero;
             canMove = false;
             go.SetActive(false);
             hasKnees = true;
@@ -128,6 +130,7 @@ public class PlayerMovement : MonoBehaviour
         } else if (go.CompareTag("Arm Pickup"))
         {
             armsTut.gameObject.SetActive(true);
+            rb.velocity = Vector3.zero;
             canMove = false;
             go.SetActive(false);
             hasArms = true;
@@ -152,12 +155,12 @@ public class PlayerMovement : MonoBehaviour
 
     IEnumerator GiveLegs()
     {
-        yield return new WaitForSeconds(5);
+        yield return new WaitForSeconds(1);
         hasLegs = true;
         GameObject.FindGameObjectWithTag("Stair Block").SetActive(false);
         legsRenderer.sprite = legSprites[0];
         legsRenderer.gameObject.AddComponent<BoxCollider2D>();
-        gameObject.transform.position = new Vector2(gameObject.transform.position.x, gameObject.transform.position.y + 5);
+        gameObject.transform.position = new Vector2(gameObject.transform.position.x, gameObject.transform.position.y + 1);
     }
 
     void FaceRight()

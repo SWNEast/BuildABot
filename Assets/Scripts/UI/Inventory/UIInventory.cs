@@ -11,7 +11,6 @@ public class UIInventory : MonoBehaviour {
     public Transform storagePanelLegs;
     public Transform storagePanelArms;
     public Transform charPanel;
-    private int noSlots = 20;
 
     private void Awake() {
         for (int i = 0; i < 3; i++) {
