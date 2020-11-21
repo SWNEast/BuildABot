@@ -10,8 +10,15 @@ public class Teleport : MonoBehaviour
 
     private void Update()
     {
-        if ((Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.W)) && teleportEnabled) { 
-            GameObject.FindGameObjectWithTag("Player").transform.position = receiver.transform.position;
+        if ((Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.W)) && teleportEnabled) {
+            if (receiver == null)
+            {
+                Debug.Log("Level Not Yet Available"); //MAKE ACTUAL PROMPT
+            }
+            else
+            {
+                GameObject.FindGameObjectWithTag("Player").transform.position = receiver.transform.position;
+            }
         } 
     }
 

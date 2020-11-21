@@ -21,7 +21,8 @@ public class PlayerMovement : MonoBehaviour
     public Inventory inventory;
     private float mx;
     private float my;
-    private Vector2 lastCheckpoint = new Vector2(-5,-5);
+    public GameObject initialSpawn;
+    private Vector2 lastCheckpoint;
     public float offsetY = 0.316f;
 
     private float movementSpeed;
@@ -45,6 +46,8 @@ public class PlayerMovement : MonoBehaviour
 
     private void Start()
     {
+        transform.position = initialSpawn.transform.position;
+        lastCheckpoint = initialSpawn.transform.position;
         bodyRenderer.sprite = bodySprites[0];
         bodyRenderer.gameObject.AddComponent<BoxCollider2D>();
         tipText.gameObject.SetActive(false);
@@ -175,7 +178,6 @@ public class PlayerMovement : MonoBehaviour
                 
             }
             rb.velocity = movement;
-            Debug.Log(rb.velocity.x);
         }
         if (jumping)
         {
