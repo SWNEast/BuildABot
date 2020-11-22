@@ -13,7 +13,7 @@ public class Menu : MonoBehaviour {
     void Awake() {
         graphicsPanel.gameObject.SetActive(false);
         audioPanel.gameObject.SetActive(false);
-        if (SceneManager.GetActiveScene().name == "Main with Inventory") {
+        if (SceneManager.GetActiveScene().name == "Main") {
             musicSlider.value = PlayerPrefs.GetFloat("MusicVolume");
             seSlider.value = PlayerPrefs.GetFloat("SEVolume");
         }

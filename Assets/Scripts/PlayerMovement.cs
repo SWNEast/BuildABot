@@ -46,6 +46,9 @@ public class PlayerMovement : MonoBehaviour
     private GameObject boulderTrigger;
     private Vector2 boulderSpawn;
 
+    public Transform legsTut;
+    public Transform springsTut;
+    public Transform armsTut;
 
 
 
@@ -64,6 +67,10 @@ public class PlayerMovement : MonoBehaviour
         boulderBlock = GameObject.FindGameObjectWithTag("Boulder Block");
         boulderTrigger = GameObject.FindGameObjectWithTag("Boulder Trigger");
         boulderSpawn = boulder.transform.position;
+
+        legsTut.gameObject.SetActive(false);
+        springsTut.gameObject.SetActive(false);
+        armsTut.gameObject.SetActive(false);
     }
 
     private void Update()
@@ -242,8 +249,11 @@ public class PlayerMovement : MonoBehaviour
         {
             legsRenderer.sprite = legSprites[0];
             legsRenderer.gameObject.AddComponent<BoxCollider2D>();
+            legsTut.gameObject.SetActive(true);
+            rb.velocity = Vector3.zero;
+            canMove = false;
             GameObject.FindGameObjectWithTag("Stair Block").SetActive(false);
-            inventory.foundItem(1);
+            inventory.foundItem(2);
             go.SetActive(false);
             legsEquipped = true;
             NewItemAnimation();
@@ -255,18 +265,25 @@ public class PlayerMovement : MonoBehaviour
             canClimb = true;
         } else if (go.CompareTag("Spring Pickup"))
         {
-            inventory.foundItem(3);
+            springsTut.gameObject.SetActive(true);
+            rb.velocity = Vector3.zero;
+            canMove = false;
+            inventory.foundItem(14);
             go.SetActive(false);
             springsEquipped = true;
             NewItemAnimation();
         } else if (go.CompareTag("Arm Pickup"))
         {
-            inventory.foundItem(5);
+            armsTut.gameObject.SetActive(true);
+            rb.velocity = Vector3.zero;
+            canMove = false;
+            inventory.foundItem(4);
             go.SetActive(false);
             armsEquipped = true;
             NewItemAnimation();
         } else if (go.CompareTag("Magnet Pickup"))
         {
+            inventory.foundItem(22);
             go.SetActive(false);
             magnetsEquipped = true;
             NewItemAnimation();
@@ -276,6 +293,7 @@ public class PlayerMovement : MonoBehaviour
         }
         else if (go.CompareTag("Wheels Pickup"))
         {
+            inventory.foundItem(16);
             go.SetActive(false);
             wheelsEquipped = true;
             springsEquipped = false; //Delete when merged
@@ -436,5 +454,9 @@ public class PlayerMovement : MonoBehaviour
         boulder.transform.position = boulderSpawn;
         boulderTrigger.SetActive(true);
         boulderBlock.SetActive(true);
+    }
+
+    public void setMovement(bool canMove) {
+        this.canMove = canMove;
     }
 }

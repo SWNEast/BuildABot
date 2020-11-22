@@ -47,7 +47,7 @@ public class SceneSwitcher : MonoBehaviour
 
     public void changeSceneDelay(string sceneName) {
         loadedScenes.Push(SceneManager.GetActiveScene().buildIndex);
-        if (sceneName.Equals("Main with Inventory")) { Invoke("newGame", 1); }
+        if (sceneName.Equals("Main")) { Invoke("newGame", 1); }
         
     }
 
@@ -55,7 +55,7 @@ public class SceneSwitcher : MonoBehaviour
         PlayerPrefs.SetFloat("MusicVolume", music.volume);
         PlayerPrefs.SetFloat("SEVolume", soundEffects.volume);
         PlayerPrefs.Save();
-        SceneManager.LoadScene("Main with Inventory");
+        SceneManager.LoadScene("Main");
     }
 
     public void FullScreen(bool full) {

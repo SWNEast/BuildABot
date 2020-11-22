@@ -38,12 +38,12 @@ public class ItemDatabase : MonoBehaviour {
             new Item(19,  "????", "??????????", "Locked Unknown", 1),
             new Item(20,  "Unknown", "Just a placeholder", "Unlocked Unkown", 1),
 
-            new Item(21, "????", "??????????", "Locked-Blaster", 2), 
-            new Item(22, "Blaster", "I bet I could shoot some enemies with this blaster...", "Unlocked Blaster", 2),
-            new Item(23, "????", "??????????", "Locked Umbrella", 2),
-            new Item(24, "Umbrella", "I wonder if I could use this for a boost from fans...?", "Unlocked Umbrella", 2),
-            new Item(25,  "????", "??????????", "Locked Unknown", 2),
-            new Item(26,  "Unknown", "Just a placeholder", "Unlocked Unknown", 2),
+            new Item(21,  "????", "??????????", "Locked Unknown", 2),
+            new Item(22,  "Magnets", "I wonder if I could attach to the red, magnetic ceiling with this?", "Unlocked Unknown", 2),
+            new Item(23, "????", "??????????", "Locked-Blaster", 2), 
+            new Item(24, "Blaster", "I bet I could shoot some enemies with this blaster...", "Unlocked Blaster", 2),
+            new Item(25, "????", "??????????", "Locked Umbrella", 2),
+            new Item(26, "Umbrella", "I wonder if I could use this for a boost from fans...?", "Unlocked Umbrella", 2),
             new Item(27,  "????", "??????????", "Locked Unknown", 2),
             new Item(28,  "Unknown", "Just a placeholder", "Unlocked Unknown", 2)            
         };
