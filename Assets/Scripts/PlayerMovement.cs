@@ -9,6 +9,7 @@ public class PlayerMovement : MonoBehaviour
     public float baseSpeed;
     public float maxY = 5;
     public float maxSpeed;
+    public float rayOffset = 0.5f;
     public Rigidbody2D rb;
     public float jumpForce = 10f;
     public TextMeshProUGUI tipText;
@@ -213,9 +214,6 @@ public class PlayerMovement : MonoBehaviour
             
         } else if (go.CompareTag("Boulder"))
         {
-            boulder.transform.position = boulderSpawn;
-            boulderTrigger.SetActive(true);
-            boulderBlock.SetActive(true);
             Die();
         }
         if (go.CompareTag("Ramp")) 
@@ -317,12 +315,12 @@ public class PlayerMovement : MonoBehaviour
         Vector2 startPosition = (Vector2)legsRenderer.transform.position - new Vector2(0f, 0.5f);
         int layerMask = LayerMask.GetMask("Ground");
         float laserLength = 0.5f;
-        RaycastHit2D groundCheck1 = Physics2D.Raycast(startPosition + new Vector2(0.6f, 0f), Vector2.down, laserLength, layerMask, 0);
+        RaycastHit2D groundCheck1 = Physics2D.Raycast(startPosition + new Vector2(rayOffset, 0f), Vector2.down, laserLength, layerMask, 0);
         RaycastHit2D groundCheck2 = Physics2D.Raycast(startPosition, Vector2.down, laserLength, layerMask, 0);
-        RaycastHit2D groundCheck3 = Physics2D.Raycast(startPosition - new Vector2(0.6f, 0f), Vector2.down, laserLength, layerMask, 0);
-        Debug.DrawRay(startPosition + new Vector2(0.6f, 0f), Vector2.down * laserLength, Color.red);
+        RaycastHit2D groundCheck3 = Physics2D.Raycast(startPosition - new Vector2(rayOffset, 0f), Vector2.down, laserLength, layerMask, 0);
+        Debug.DrawRay(startPosition + new Vector2(rayOffset, 0f), Vector2.down * laserLength, Color.red);
         Debug.DrawRay(startPosition, Vector2.down * laserLength, Color.red);
-        Debug.DrawRay(startPosition - new Vector2(0.6f, 0f), Vector2.down * laserLength, Color.red);
+        Debug.DrawRay(startPosition - new Vector2(rayOffset, 0f), Vector2.down * laserLength, Color.red);
         if ((groundCheck1.collider != null && groundCheck1.collider.gameObject.CompareTag("Ground")) ||
             (groundCheck2.collider != null && groundCheck2.collider.gameObject.CompareTag("Ground")) ||
             (groundCheck3.collider != null && groundCheck3.collider.gameObject.CompareTag("Ground")))
@@ -429,6 +427,14 @@ public class PlayerMovement : MonoBehaviour
 
     void Die()
     {
+        ResetBoulder();
         transform.position = new Vector2(lastCheckpoint.x, lastCheckpoint.y + 0.5f);
+    }
+
+    void ResetBoulder()
+    {
+        boulder.transform.position = boulderSpawn;
+        boulderTrigger.SetActive(true);
+        boulderBlock.SetActive(true);
     }
 }
