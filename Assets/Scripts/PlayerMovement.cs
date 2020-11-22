@@ -19,6 +19,7 @@ public class PlayerMovement : MonoBehaviour
     public SpriteRenderer legsRenderer;
     public Sprite[] legSprites;
     public Inventory inventory;
+    
     private float mx;
     private float my;
     public GameObject initialSpawn;
@@ -39,8 +40,13 @@ public class PlayerMovement : MonoBehaviour
     private float speedBoost = 0;
     private bool onRamp = false;
 
-    
-    
+    private GameObject boulder;
+    private GameObject boulderBlock;
+    private GameObject boulderTrigger;
+    private Vector2 boulderSpawn;
+
+
+
 
 
 
@@ -48,9 +54,15 @@ public class PlayerMovement : MonoBehaviour
     {
         transform.position = initialSpawn.transform.position;
         lastCheckpoint = initialSpawn.transform.position;
+        
         bodyRenderer.sprite = bodySprites[0];
         bodyRenderer.gameObject.AddComponent<BoxCollider2D>();
         tipText.gameObject.SetActive(false);
+
+        boulder = GameObject.FindGameObjectWithTag("Boulder");
+        boulderBlock = GameObject.FindGameObjectWithTag("Boulder Block");
+        boulderTrigger = GameObject.FindGameObjectWithTag("Boulder Trigger");
+        boulderSpawn = boulder.transform.position;
     }
 
     private void Update()
@@ -201,6 +213,9 @@ public class PlayerMovement : MonoBehaviour
             
         } else if (go.CompareTag("Boulder"))
         {
+            boulder.transform.position = boulderSpawn;
+            boulderTrigger.SetActive(true);
+            boulderBlock.SetActive(true);
             Die();
         }
         if (go.CompareTag("Ramp")) 
@@ -269,10 +284,7 @@ public class PlayerMovement : MonoBehaviour
             NewItemAnimation();
         } else if (go.CompareTag("Boulder Trigger"))
         {
-            if (GameObject.FindGameObjectWithTag("Boulder Block") != null)
-            {
-                GameObject.FindGameObjectWithTag("Boulder Block").SetActive(false);
-            }
+            boulderBlock.SetActive(false);
             go.SetActive(false);
         }
     }
