@@ -11,6 +11,7 @@ public class UIItem : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler,
     private Tooltip tooltip;
     private int slot = 999;
     public Equipped equipped;
+    public AudioSource click;
 
     // When game started, assign the image to the UIItem, find the selected item
     public void Awake() {
@@ -19,6 +20,7 @@ public class UIItem : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler,
         selectedItem = GameObject.Find("SelectedItem").GetComponent<UIItem>();
         tooltip = GameObject.Find("Tooltip").GetComponent<Tooltip>();
         equipped = GameObject.Find("Equipped Master Panel").GetComponent<Equipped>();
+        click = GameObject.Find("Click Sound").GetComponent<AudioSource>();
     }
 
     // Assign the new item when updating, if given null show nothing
@@ -39,6 +41,7 @@ public class UIItem : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler,
 
     // Method runs if the item is clicked
     public void OnPointerClick(PointerEventData eventData) {
+        click.Play();
         if (this.item != null) {                                // If the player clicks on an actual item:
             if (this.slot >= 15 && this.item.id > 4) {
                 if (selectedItem.item != null) {                        // If there was already a selected item, clone it and replace it with the item clicked on

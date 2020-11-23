@@ -13,6 +13,7 @@ public class Inventory : MonoBehaviour {
     public Transform menu;
     public AudioSource music;
     public AudioSource soundEffects;
+    public AudioSource openMenu;
 
     private void Start() {
         menu.gameObject.SetActive(false);
@@ -54,12 +55,14 @@ public class Inventory : MonoBehaviour {
 
     public void Update() {
         if (Input.GetKeyDown(KeyCode.I)) {
+            openMenu.Play();
             inventoryUI.gameObject.SetActive(!inventoryUI.gameObject.activeSelf);
             panel.gameObject.SetActive(!panel.gameObject.activeSelf);
             invOpenBtn.gameObject.SetActive(!invOpenBtn.gameObject.activeSelf);
             invCloseBtn.gameObject.SetActive(!invCloseBtn.gameObject.activeSelf);
         }
         if (Input.GetKeyDown(KeyCode.Escape)) {
+            openMenu.Play();
             if (inventoryUI.gameObject.activeSelf == false && optionsMenu.gameObject.activeSelf == false) {
                 menu.gameObject.SetActive(!menu.gameObject.activeSelf);
                 panel.gameObject.SetActive(!panel.gameObject.activeSelf);

@@ -40,17 +40,18 @@ public class PlayerMovement : MonoBehaviour
     private bool wheelsEquipped = false;
     private float speedBoost = 0;
     private bool onRamp = false;
-
     private GameObject boulder;
     private GameObject boulderBlock;
     private GameObject boulderTrigger;
     private Vector2 boulderSpawn;
-
     public Transform legsTut;
     public Transform springsTut;
     public Transform armsTut;
-
     public Equipped equipped;
+    public AudioSource magnetNoise;
+    public AudioSource pickupNoise;
+    public AudioSource checkpointNoise;
+    public AudioSource negativeNoise;
 
 
 
@@ -135,7 +136,7 @@ public class PlayerMovement : MonoBehaviour
             {
                 if (magnetsEquipped)
                 {
-                    Debug.Log("Magnets on");
+                    magnetNoise.Play();
                     Magnet();
                 }
             } 
@@ -252,6 +253,7 @@ public class PlayerMovement : MonoBehaviour
         GameObject go = collision.gameObject;
         if (go.CompareTag("Leg Pickup"))
         {
+            pickupNoise.Play();
             legsRenderer.sprite = legSprites[0];
             legsRenderer.gameObject.AddComponent<BoxCollider2D>();
             legsTut.gameObject.SetActive(true);
@@ -264,12 +266,14 @@ public class PlayerMovement : MonoBehaviour
             NewItemAnimation();
         } else if (go.CompareTag("Checkpoint"))
         {
+            checkpointNoise.Play();
             lastCheckpoint = go.transform.position;
         } else if (go.CompareTag("Ladder") && armsEquipped)
         {
             canClimb = true;
         } else if (go.CompareTag("Spring Pickup"))
         {
+            pickupNoise.Play();
             springsTut.gameObject.SetActive(true);
             rb.velocity = Vector3.zero;
             canMove = false;
@@ -279,6 +283,7 @@ public class PlayerMovement : MonoBehaviour
             NewItemAnimation();
         } else if (go.CompareTag("Arm Pickup"))
         {
+            pickupNoise.Play();
             armsTut.gameObject.SetActive(true);
             rb.velocity = Vector3.zero;
             canMove = false;
@@ -288,6 +293,7 @@ public class PlayerMovement : MonoBehaviour
             NewItemAnimation();
         } else if (go.CompareTag("Magnet Pickup"))
         {
+            pickupNoise.Play();
             inventory.foundItem(22);
             go.SetActive(false);
             //magnetsEquipped = true;
@@ -298,6 +304,7 @@ public class PlayerMovement : MonoBehaviour
         }
         else if (go.CompareTag("Wheels Pickup"))
         {
+            pickupNoise.Play();
             inventory.foundItem(16);
             go.SetActive(false);
             wheelsEquipped = true;
@@ -450,6 +457,7 @@ public class PlayerMovement : MonoBehaviour
 
     void Die()
     {
+        negativeNoise.Play();
         ResetBoulder();
         transform.position = new Vector2(lastCheckpoint.x, lastCheckpoint.y + 0.5f);
     }
