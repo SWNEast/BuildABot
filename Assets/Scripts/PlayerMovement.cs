@@ -50,7 +50,7 @@ public class PlayerMovement : MonoBehaviour
     public Transform springsTut;
     public Transform armsTut;
 
-
+    public Equipped equipped;
 
 
 
@@ -75,6 +75,10 @@ public class PlayerMovement : MonoBehaviour
 
     private void Update()
     {
+        springsEquipped = equipped.isEquipped(14);
+        wheelsEquipped = equipped.isEquipped(16);
+        magnetsEquipped = equipped.isEquipped(22);
+
         if (rb.velocity.x < 0)
         {
             FaceLeft();
@@ -102,19 +106,19 @@ public class PlayerMovement : MonoBehaviour
                 my = Input.GetAxis("Vertical");
             }
 
-            if (Input.GetKeyDown(KeyCode.C))
+            if (Input.GetKeyDown(KeyCode.X))
             {
                 if (springsEquipped && PlayerIsOnGround())
                 {
                     jumping = true;
                 } 
-            } else if (Input.GetKey(KeyCode.C))
+            } else if (Input.GetKey(KeyCode.X))
             {
                 if (wheelsEquipped)
                 {
                     Sprint(true);
                 }
-            } else if (Input.GetKeyUp(KeyCode.C))
+            } else if (Input.GetKeyUp(KeyCode.X))
             {
                 if (springsEquipped && rb.velocity.y > 0)
                 {
@@ -127,7 +131,7 @@ public class PlayerMovement : MonoBehaviour
 
             
 
-            if (Input.GetKeyDown(KeyCode.X))
+            if (Input.GetKeyDown(KeyCode.C))
             {
                 if (magnetsEquipped)
                 {
@@ -285,7 +289,7 @@ public class PlayerMovement : MonoBehaviour
         {
             inventory.foundItem(22);
             go.SetActive(false);
-            magnetsEquipped = true;
+            //magnetsEquipped = true;
             NewItemAnimation();
         } else if (go.CompareTag("Magnet"))
         {
@@ -385,7 +389,7 @@ public class PlayerMovement : MonoBehaviour
 
     void Magnet()
     {
-        if (canMagnet)
+        if (magnetsEquipped)
         {
             if (rb.gravityScale.Equals(0.0f)) //Magnet on
             {

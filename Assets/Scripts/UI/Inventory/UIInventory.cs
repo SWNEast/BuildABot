@@ -11,6 +11,7 @@ public class UIInventory : MonoBehaviour {
     public Transform storagePanelLegs;
     public Transform storagePanelArms;
     public Transform charPanel;
+    //public Equipped equipped;
 
     private void Awake() {
         for (int i = 0; i < 3; i++) {
@@ -44,11 +45,20 @@ public class UIInventory : MonoBehaviour {
             GameObject instance = Instantiate(slotPrefab);
             instance.transform.SetParent(charPanel);
             uiItems.Add(instance.GetComponentInChildren<UIItem>());
+            uiItems[i+18].SetSlot(i);
         }
     }
 
     public void UpdateSlot(int slot, Item item) {
         uiItems[slot].UpdateItem(item);
+        /*if (slot >= 18) {
+            Debug.Log("In Character Panel");
+            if (item == null) {
+                if (slot == 18) { equipped.EquipItem(null, 0); }
+                else if (slot == 19) { equipped.EquipItem(null, 1); }
+                else if (slot == 20) { equipped.EquipItem(null, 2); }
+            } else{ equipped.EquipItem(item, item.category); }
+        }*/
     }
 
     public void AddItem(Item item) {
