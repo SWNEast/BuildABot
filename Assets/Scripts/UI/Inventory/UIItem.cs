@@ -25,8 +25,13 @@ public class UIItem : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler,
     public void UpdateItem(Item item) {
         this.item = item;
         if (this.item != null) {
-            spriteImage.color = Color.white;
-            spriteImage.sprite = item.icon;
+            if (slot < 15) {
+                spriteImage.color = Color.gray;
+                spriteImage.sprite = item.icon;
+            }else {
+                spriteImage.color = Color.white;
+                spriteImage.sprite = item.icon;
+            }
         } else {
             spriteImage.color = Color.clear;
         }

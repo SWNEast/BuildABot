@@ -1,10 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class UIInventory : MonoBehaviour {
     public List<UIItem> uiItems = new List<UIItem>();
     public GameObject slotPrefab;
+    public GameObject lockedSlotPrefab;
     public Transform invPanel;
     public Transform storagePanelParent;
     public Transform storagePanelBody;
@@ -16,24 +18,28 @@ public class UIInventory : MonoBehaviour {
     private void Awake() {
         for (int i = 0; i < 3; i++) {
             GameObject instance = Instantiate(slotPrefab);
+            instance.GetComponent<Image>().color = Color.gray;
             instance.transform.SetParent(storagePanelParent);
             uiItems.Add(instance.GetComponentInChildren<UIItem>());
             uiItems[i].SetSlot(i);
         }
         for (int i = 0; i < 4; i++) {
             GameObject instance = Instantiate(slotPrefab);
+            instance.GetComponent<Image>().color = Color.gray;
             instance.transform.SetParent(storagePanelBody);
             uiItems.Add(instance.GetComponentInChildren<UIItem>());
             uiItems[i+3].SetSlot(i+3);
         }
         for (int i = 0; i < 4; i++) {
             GameObject instance = Instantiate(slotPrefab);
+            instance.GetComponent<Image>().color = Color.gray;
             instance.transform.SetParent(storagePanelLegs);
             uiItems.Add(instance.GetComponentInChildren<UIItem>());
             uiItems[i+7].SetSlot(i+7);
         }
         for (int i = 0; i < 4; i++) {
             GameObject instance = Instantiate(slotPrefab);
+            instance.GetComponent<Image>().color = Color.gray;
             instance.transform.SetParent(storagePanelArms);
             uiItems.Add(instance.GetComponentInChildren<UIItem>());
             uiItems[i+11].SetSlot(i+11);
