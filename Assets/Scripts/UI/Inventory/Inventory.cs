@@ -37,7 +37,7 @@ public class Inventory : MonoBehaviour {
             Debug.Log("Removed item " + toRemove.title);
             if (found != null) { inventoryUI.ReplaceItem(toRemove, found); }
             else { inventoryUI.RemoveItem(toRemove); }
-        }        
+        }if (id > 4 && !characterItems.Contains(found)) { giveItem(id); }
     }
 
     // Gives the player an item based off the item id

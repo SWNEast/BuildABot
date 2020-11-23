@@ -135,6 +135,7 @@ public class PlayerMovement : MonoBehaviour
             {
                 if (magnetsEquipped)
                 {
+                    Debug.Log("Magnets on");
                     Magnet();
                 }
             } 

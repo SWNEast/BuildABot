@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEditor;
 
 public class Equipped : MonoBehaviour {
     private Item[] equippedItems = {null, null, null};
@@ -11,15 +12,21 @@ public class Equipped : MonoBehaviour {
 
     public void EquipItem(Item item, int bodyPart) {
         Image image = null;
-        if (bodyPart == 0) { image = bodyPanel.gameObject.GetComponent<Image>(); }
-        else if (bodyPart == 1) { image = legsPanel.gameObject.GetComponent<Image>(); }
-        else if (bodyPart == 2) { image = armsPanel.gameObject.GetComponent<Image>(); }
+        if (bodyPart == 18) { image = bodyPanel.gameObject.GetComponent<Image>(); }
+        else if (bodyPart == 19) { image = legsPanel.gameObject.GetComponent<Image>(); }
+        else if (bodyPart == 20) { image = armsPanel.gameObject.GetComponent<Image>(); }
 
+        equippedItems[bodyPart-18] = item;
+        
         if (item != null) {
-            Debug.Log("Equipped " + item.icon);
-            equippedItems[bodyPart] = item;
+            string imgPath = AssetDatabase.GetAssetPath(item.icon);
+            imgPath = imgPath.Substring(0, imgPath.Length-4);
+            imgPath = imgPath + "hud";
+            imgPath = imgPath.Remove(0,17);
+            Debug.Log(imgPath);
+            Sprite spr = Resources.Load<Sprite>(imgPath);
             image.color = Color.white;
-            image.sprite = item.icon;
+            image.sprite = spr;//item.icon;
         } else {
             image.color = Color.clear;
         }
@@ -29,8 +36,6 @@ public class Equipped : MonoBehaviour {
         foreach (Item i in equippedItems) {
             if (i != null)
                 if (i.id == id) { return true; }
-            else
-                return false;
         }
         return false;
     }

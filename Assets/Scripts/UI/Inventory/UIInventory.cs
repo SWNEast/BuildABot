@@ -18,47 +18,43 @@ public class UIInventory : MonoBehaviour {
             GameObject instance = Instantiate(slotPrefab);
             instance.transform.SetParent(storagePanelParent);
             uiItems.Add(instance.GetComponentInChildren<UIItem>());
+            uiItems[i].SetSlot(i);
         }
         for (int i = 0; i < 4; i++) {
             GameObject instance = Instantiate(slotPrefab);
             instance.transform.SetParent(storagePanelBody);
             uiItems.Add(instance.GetComponentInChildren<UIItem>());
+            uiItems[i+3].SetSlot(i+3);
         }
         for (int i = 0; i < 4; i++) {
             GameObject instance = Instantiate(slotPrefab);
             instance.transform.SetParent(storagePanelLegs);
             uiItems.Add(instance.GetComponentInChildren<UIItem>());
+            uiItems[i+7].SetSlot(i+7);
         }
         for (int i = 0; i < 4; i++) {
             GameObject instance = Instantiate(slotPrefab);
             instance.transform.SetParent(storagePanelArms);
             uiItems.Add(instance.GetComponentInChildren<UIItem>());
+            uiItems[i+11].SetSlot(i+11);
         }
         for (int i = 0; i < 3; i++) {
-
             GameObject instance = Instantiate(slotPrefab);
             instance.transform.SetParent(invPanel);
             uiItems.Add(instance.GetComponentInChildren<UIItem>());
+            uiItems[i+15].SetSlot(i+15);
         }
         
         for (int i = 0; i < 3; i++) {
             GameObject instance = Instantiate(slotPrefab);
             instance.transform.SetParent(charPanel);
             uiItems.Add(instance.GetComponentInChildren<UIItem>());
-            uiItems[i+18].SetSlot(i);
+            uiItems[i+18].SetSlot(i+18);
         }
     }
 
     public void UpdateSlot(int slot, Item item) {
         uiItems[slot].UpdateItem(item);
-        /*if (slot >= 18) {
-            Debug.Log("In Character Panel");
-            if (item == null) {
-                if (slot == 18) { equipped.EquipItem(null, 0); }
-                else if (slot == 19) { equipped.EquipItem(null, 1); }
-                else if (slot == 20) { equipped.EquipItem(null, 2); }
-            } else{ equipped.EquipItem(item, item.category); }
-        }*/
     }
 
     public void AddItem(Item item) {

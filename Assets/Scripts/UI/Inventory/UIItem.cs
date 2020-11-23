@@ -9,7 +9,7 @@ public class UIItem : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler,
     private Image spriteImage;
     private UIItem selectedItem;
     private Tooltip tooltip;
-    private int slot = 9;
+    private int slot = 999;
     public Equipped equipped;
 
     // When game started, assign the image to the UIItem, find the selected item
@@ -18,7 +18,6 @@ public class UIItem : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler,
         UpdateItem(null);
         selectedItem = GameObject.Find("SelectedItem").GetComponent<UIItem>();
         tooltip = GameObject.Find("Tooltip").GetComponent<Tooltip>();
-        //equipped = Object.FindObjectOfType<Equipped>();
         equipped = GameObject.Find("Equipped Master Panel").GetComponent<Equipped>();
     }
 
@@ -36,28 +35,30 @@ public class UIItem : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler,
     // Method runs if the item is clicked
     public void OnPointerClick(PointerEventData eventData) {
         if (this.item != null) {                                // If the player clicks on an actual item:
-            if (this.item.id % 2 == 0 && this.item.id > 4) {
+            if (this.slot >= 15 && this.item.id > 4) {
                 if (selectedItem.item != null) {                        // If there was already a selected item, clone it and replace it with the item clicked on
                     Item clone = new Item(selectedItem.item); 
                     selectedItem.UpdateItem(this.item);
                     UpdateItem(clone);                                  // Puts the cloned item in the place of where the old item used to be
                     Debug.Log(slot);
-                    if (this.slot < 9) { equipped.EquipItem(clone, slot); }
+                    if (this.slot >= 18) { equipped.EquipItem(clone, slot); }
                 } else {
                     selectedItem.UpdateItem(this.item);             // If there wasn't a selected item, just select this item and replace it with nothing
                     UpdateItem(null);
-                    if (this.slot < 9) { equipped.EquipItem(null, slot); }
+                    if (this.slot >= 18) { equipped.EquipItem(null, slot); }
                 }
             }
         } else if (selectedItem.item != null) {                 // If there was no item in the slot, drop the selected item in said place
-            if (this.slot < 9) {
-                if (slot == selectedItem.item.category) {
+            if (this.slot >= 18) {
+                if ((slot-18) == selectedItem.item.category) {
                     UpdateItem(selectedItem.item);
                     equipped.EquipItem(selectedItem.item, slot);
                     selectedItem.UpdateItem(null);
                 }
             } else {
+                int tempSlot = selectedItem.slot;
                 UpdateItem(selectedItem.item);
+                selectedItem.SetSlot(tempSlot);
                 selectedItem.UpdateItem(null);
             }
         }
