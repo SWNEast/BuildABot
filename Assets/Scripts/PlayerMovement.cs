@@ -25,11 +25,16 @@ public class PlayerMovement : MonoBehaviour
     private float my;
     public GameObject initialSpawn;
     private Vector2 lastCheckpoint;
+    private SpriteRenderer lastCheckpointSprite = null;
+    public Sprite onFlagSprite;
+    public Sprite offFlagSprite;
     public float offsetY = 0.316f;
+    private Vector3 lastPosition = new Vector3(-12f, -7f,0);
+    private bool facingRight = true;
 
     private float movementSpeed;
     private bool isGrounded = false;
-    private bool canMove = true;
+    private bool canMove = false;
     private bool legsEquipped = false;
     private bool springsEquipped = false;
     private bool jumping = false;
@@ -86,10 +91,13 @@ public class PlayerMovement : MonoBehaviour
         wheelsEquipped = equipped.isEquipped(16);
         magnetsEquipped = equipped.isEquipped(22);
 
-        if (rb.velocity.x < 0)
+        Vector3 direction = transform.position - lastPosition;
+        Vector3 localDirection = transform.InverseTransformDirection(direction);
+        lastPosition = transform.position;
+        if (localDirection.x < 0)
         {
             FaceLeft();
-        } else if (rb.velocity.x > 0)
+        } else if (localDirection.x > 0)
         {
             FaceRight();
         }
@@ -262,9 +270,9 @@ public class PlayerMovement : MonoBehaviour
             pickupNoise.Play();
             legsRenderer.sprite = legSprites[0];
             legsRenderer.gameObject.AddComponent<BoxCollider2D>();
-            legsTut.gameObject.SetActive(true);
-            rb.velocity = Vector3.zero;
-            canMove = false;
+            //legsTut.gameObject.SetActive(true);
+            //rb.velocity = Vector3.zero;
+            //canMove = false;
             GameObject.FindGameObjectWithTag("Stair Block").SetActive(false);
             inventory.foundItem(2);
             go.SetActive(false);
@@ -273,7 +281,14 @@ public class PlayerMovement : MonoBehaviour
         } else if (go.CompareTag("Checkpoint"))
         {
             checkpointNoise.Play();
+            if (lastCheckpointSprite != null)
+            {
+                lastCheckpointSprite.sprite = offFlagSprite;
+            }
             lastCheckpoint = go.transform.position;
+            go.GetComponent<SpriteRenderer>().sprite = onFlagSprite;
+            lastCheckpointSprite = go.GetComponent<SpriteRenderer>();
+
         } else if (go.CompareTag("Ladder") && armsEquipped)
         {
             canClimb = true;
@@ -282,9 +297,9 @@ public class PlayerMovement : MonoBehaviour
         } else if (go.CompareTag("Spring Pickup"))
         {
             pickupNoise.Play();
-            springsTut.gameObject.SetActive(true);
-            rb.velocity = Vector3.zero;
-            canMove = false;
+            //springsTut.gameObject.SetActive(true);
+            //rb.velocity = Vector3.zero;
+            //canMove = false;
             inventory.foundItem(14);
             go.SetActive(false);
             springsEquipped = true;
@@ -293,9 +308,9 @@ public class PlayerMovement : MonoBehaviour
         } else if (go.CompareTag("Arm Pickup"))
         {
             pickupNoise.Play();
-            armsTut.gameObject.SetActive(true);
-            rb.velocity = Vector3.zero;
-            canMove = false;
+            //armsTut.gameObject.SetActive(true);
+            //rb.velocity = Vector3.zero;
+            //canMove = false;
             inventory.foundItem(4);
             go.SetActive(false);
             armsEquipped = true;
@@ -443,6 +458,7 @@ public class PlayerMovement : MonoBehaviour
 
     void FaceRight()
     {
+        facingRight = true;
         bodyRenderer.sprite = bodySprites[0];
         if (armsEquipped)
         {
@@ -453,6 +469,7 @@ public class PlayerMovement : MonoBehaviour
 
     void FaceLeft()
     {
+        facingRight = false;
         bodyRenderer.sprite = bodySprites[1];
         if (armsEquipped)
         {
@@ -482,5 +499,10 @@ public class PlayerMovement : MonoBehaviour
 
     public void setMovement(bool canMove) {
         this.canMove = canMove;
+    }
+
+    public bool getFacingRight()
+    {
+        return facingRight;
     }
 }
