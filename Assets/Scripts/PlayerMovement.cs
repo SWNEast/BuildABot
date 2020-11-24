@@ -45,9 +45,9 @@ public class PlayerMovement : MonoBehaviour
     private bool wheelsEquipped = false;
     private float speedBoost = 0;
     private bool onRamp = false;
-    private GameObject boulder;
-    private GameObject boulderBlock;
-    private GameObject boulderTrigger;
+    public GameObject boulder;
+    public GameObject boulderBlock;
+    public GameObject boulderTrigger;
     private Vector2 boulderSpawn;
     //public Transform legsTut;
     //public Transform springsTut;
@@ -73,9 +73,9 @@ public class PlayerMovement : MonoBehaviour
         bodyRenderer.gameObject.AddComponent<BoxCollider2D>();
         tipText.gameObject.SetActive(false);
 
-        boulder = GameObject.FindGameObjectWithTag("Boulder");
-        boulderBlock = GameObject.FindGameObjectWithTag("Boulder Block");
-        boulderTrigger = GameObject.FindGameObjectWithTag("Boulder Trigger");
+        //boulder = GameObject.FindGameObjectWithTag("Boulder");
+        //boulderBlock = GameObject.FindGameObjectWithTag("Boulder Block");
+        //boulderTrigger = GameObject.FindGameObjectWithTag("Boulder Trigger");
         boulderSpawn = boulder.transform.position;
 
         //legsTut.gameObject.SetActive(false);
