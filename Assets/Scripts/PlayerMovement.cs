@@ -49,9 +49,9 @@ public class PlayerMovement : MonoBehaviour
     private GameObject boulderBlock;
     private GameObject boulderTrigger;
     private Vector2 boulderSpawn;
-    public Transform legsTut;
-    public Transform springsTut;
-    public Transform armsTut;
+    //public Transform legsTut;
+    //public Transform springsTut;
+    //public Transform armsTut;
     public Equipped equipped;
     public AudioSource magnetNoise;
     public AudioSource pickupNoise;
@@ -59,8 +59,8 @@ public class PlayerMovement : MonoBehaviour
     public AudioSource negativeNoise;
     public AudioSource jumpNoise;
     public AudioSource ladderNoise;
-    public Transform tutPanel1;
-    public Transform tutPanel2;
+    //public Transform tutPanel1;
+    //public Transform tutPanel2;
 
 
 
@@ -78,11 +78,11 @@ public class PlayerMovement : MonoBehaviour
         boulderTrigger = GameObject.FindGameObjectWithTag("Boulder Trigger");
         boulderSpawn = boulder.transform.position;
 
-        legsTut.gameObject.SetActive(false);
-        springsTut.gameObject.SetActive(false);
-        armsTut.gameObject.SetActive(false);
-        tutPanel1.gameObject.SetActive(false);
-        tutPanel2.gameObject.SetActive(false);
+        //legsTut.gameObject.SetActive(false);
+        //springsTut.gameObject.SetActive(false);
+        //armsTut.gameObject.SetActive(false);
+        //tutPanel1.gameObject.SetActive(false);
+        //tutPanel2.gameObject.SetActive(false);
     }
 
     private void Update()
@@ -164,24 +164,6 @@ public class PlayerMovement : MonoBehaviour
             rb.velocity = movement;
         } else if (canMove)
         {
-            /*if (legsEquipped && PlayerIsOnGround())
-            {
-                Vector2 startPosition = (Vector2)legsRenderer.transform.position - new Vector2(0f, 0.5f);
-                int layerMask = LayerMask.GetMask("Ground");
-                float laserLength = 5f;
-                RaycastHit2D groundCheck = Physics2D.Raycast(startPosition + new Vector2(0.6f, 0f), Vector2.down, laserLength, layerMask, 0);
-                Debug.Log("Estimated position" + (new Vector2(transform.position.x, transform.position.y - groundCheck.distance)));
-                transform.position = new Vector2(transform.position.x, transform.position.y - groundCheck.distance);
-            }*/
-            //Vector2 movement;
-            //if (rb.velocity.y > 1 && !jumping)
-            //{
-            //    movement = new Vector2(mx * movementSpeed, 1);
-
-            //} else
-            //{
-            //    movement = new Vector2(mx * movementSpeed, rb.velocity.y);
-            //}
             Vector2 movement;
             if (PlayerIsOnSlope())
             {
@@ -196,10 +178,7 @@ public class PlayerMovement : MonoBehaviour
                 {
                     rb.gravityScale = 0f;
                     movement = new Vector2(mx * movementSpeed, 0);
-                } //else if (rb.velocity.y <= 0 && DistanceToGround() != Vector2.zero) //Moving down check
-                //{
-                //    transform.position = new Vector2(transform.position.x, DistanceToGround().y + offsetY);
-                //}
+                } 
                 else
                 {
                     rb.gravityScale = 1f;
@@ -303,7 +282,7 @@ public class PlayerMovement : MonoBehaviour
             inventory.foundItem(14);
             go.SetActive(false);
             springsEquipped = true;
-            tutPanel1.gameObject.SetActive(true);
+            //tutPanel1.gameObject.SetActive(true);
             NewItemAnimation();
         } else if (go.CompareTag("Arm Pickup"))
         {
@@ -423,7 +402,7 @@ public class PlayerMovement : MonoBehaviour
 
     void Magnet()
     {
-        if (magnetsEquipped)
+        if (canMagnet)
         {
             if (rb.gravityScale.Equals(0.0f)) //Magnet on
             {
