@@ -242,6 +242,9 @@ TextureImporter:
   - first:
       213: -3683373329807270954
     second: Tilemap_60
+  - first:
+      213: 198197823790817488
+    second: Tilemap_61
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -1656,6 +1659,27 @@ TextureImporter:
       bones: []
       spriteID: 6db90bdc87702ecc0800000000000000
       internalID: -3683373329807270954
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Tilemap_61
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 16
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0d0ae42eed320c200800000000000000
+      internalID: 198197823790817488
       vertices: []
       indices: 
       edges: []

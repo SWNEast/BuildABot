@@ -25,6 +25,9 @@ public class PlayerMovement : MonoBehaviour
     private float my;
     public GameObject initialSpawn;
     private Vector2 lastCheckpoint;
+    private SpriteRenderer lastCheckpointSprite = null;
+    public Sprite onFlagSprite;
+    public Sprite offFlagSprite;
     public float offsetY = 0.316f;
     private Vector3 lastPosition = new Vector3(-12f, -7f,0);
     private bool facingRight = true;
@@ -264,7 +267,14 @@ public class PlayerMovement : MonoBehaviour
             NewItemAnimation();
         } else if (go.CompareTag("Checkpoint"))
         {
+            if (lastCheckpointSprite != null)
+            {
+                lastCheckpointSprite.sprite = offFlagSprite;
+            }
             lastCheckpoint = go.transform.position;
+            go.GetComponent<SpriteRenderer>().sprite = onFlagSprite;
+            lastCheckpointSprite = go.GetComponent<SpriteRenderer>();
+
         } else if (go.CompareTag("Ladder") && armsEquipped)
         {
             canClimb = true;

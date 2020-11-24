@@ -19,9 +19,11 @@ public class DialogDriver : MonoBehaviour
     public GameObject speakerImage;
     public CanvasGroup blackScreen;
 
-    private bool showing;
+    private bool speaking;
     private bool flashing;
     private string speaker;
+    private List<(string, string)> queue = new List<(string, string)>();
+    private bool isColliding;
 
     private void Start()
     {
@@ -31,17 +33,19 @@ public class DialogDriver : MonoBehaviour
 
     private void Update()
     {
+        isColliding = false;
+
         if (Input.GetKeyDown(KeyCode.V))
         {
-            Hide();
+            speaking = false;
         }
 
-        if (!flashing && showing)
+        if (!flashing && speaking)
         {
             StartCoroutine(FlashText());
         }
 
-        if (showing)
+        if (speaking)
         {
             if (speaker == "bart")
             {
@@ -54,260 +58,191 @@ public class DialogDriver : MonoBehaviour
                 speakerImage.GetComponent<Image>().sprite = GameObject.Find("Body").GetComponent<SpriteRenderer>().sprite;
             }
 
+            Show();
+        } else
+        {
+            Hide();
+            if (queue.Count != 0)
+            {
+                StartCoroutine(Speak(queue[0].Item1, queue[0].Item2));
+                queue.RemoveAt(0);
+            }
+            
         }
+
+        
+
+
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        if (isColliding)
+        {
+            return;
+        }
         GameObject go = collision.gameObject;
+        isColliding = true;
         if (go.Equals(dialogTriggers[0]))//ON SPAWN
         {
-            speaker = "unknown";
-            string[] lines = new string[4] { 
-                "Can you hear me now?", 
-                "Oh this might be helpful!", 
-                "*thud*", 
-                "Hi! I’m Bart, thanks to me you can now see and hear! You seem somewhat capable. Follow me!"
-            };
-            StartCoroutine(Multi(lines));
+            queue.Add(("Can you hear me now?", "unknown" ));
+            queue.Add(("Oh this might be helpful!", "unknown"));
+            queue.Add(("*thud*", "unknown"));
+            queue.Add(("Hi! I’m Bart, thanks to me you can now see and hear! You seem somewhat capable. Follow me!", "bart"));
+
             go.SetActive(false);
         }
         else if (go.Equals(dialogTriggers[1]))//FIRST STAIRCASE
         {
-            speaker = "bart";
-            string[] lines = new string[3]
-            {
-                "What are you doing down there? Come on we have to go!",
-                "......",
-                "Are you struggling with the stairs? Here, these might help.",
-            };
-            StartCoroutine(Multi(lines));
+
+            queue.Add(("What are you doing down there? Come on we have to go!", "bart"));
+            queue.Add(("......", "bart"));
+            queue.Add(("Are you struggling with the stairs? Here, these might help.", "bart"));
+            
             go.SetActive(false);
         }
         else if (go.Equals(dialogTriggers[2]))//FIRST GAP
         {
-            speaker = "bart";
-            string[] lines = new string[2]
-            {
-                "Stuck again!",
-                "I'll do the heavy lifting again but this is the last time!"
-            };
-            StartCoroutine(Multi(lines));
             go.SetActive(false);
+            Debug.Log("Added to queue");
+            queue.Add(("Stuck again!", "bart"));
+            queue.Add(("I'll do the heavy lifting again but this is the last time!", "bart"));
+            
+            
         }
         else if (go.Equals(dialogTriggers[3]))//FIRST LADDER
         {
-            speaker = "bart";
-            string[] lines = new string[3]
-            {
-                "Right just up here we go...",
-                "YOU HAVE TO BE KIDDING ME!",
-                "YOU KNOW WHAT! I'LL WAIT FOR YOU UP HERE. FIGURE IT OUT!"
-            };
-            StartCoroutine(Multi(lines));
+            queue.Add(("Right, just up here we go", "bart"));
+            queue.Add(("YOU HAVE TO BE KIDDING ME", "bart"));
+            queue.Add(("YOU KNOW WHAT! I'LL WAIT FOR YOU UP HERE. FIGURE IT OUT!", "bart"));
+            
             go.SetActive(false);
         }
         else if (go.Equals(dialogTriggers[4]))//AFTER CLIMBING FIRST LADDER
         {
-            speaker = "bart";
-            string[] lines = new string[1]
-            {
-                "Finally... Right then, come along."
-            };
-            StartCoroutine(Multi(lines));
+            queue.Add(("Finally... Right then, come along.", "bart"));
+            
             go.SetActive(false);
         }
         else if (go.Equals(dialogTriggers[5]))//AFTER DROPPING AT FIRST MAGNET
         {
-            speaker = "bart";
-            string[] lines = new string[3]
-            {
-                "This is getting ridiculous now.",
-                "I really have picked the most inept robot.",
-                "There must be something nearby that can help."
-            };
-            StartCoroutine(Multi(lines));
+            queue.Add(("This is getting ridiculous now.", "bart"));
+            queue.Add(("I really have picked the most inept robot.", "bart"));
+            queue.Add(("There must be something nearby that can help.", "bart"));
+            
             go.SetActive(false);
         }
         else if (go.Equals(dialogTriggers[6]))//LEGACY. WAS AT MAGNET PICKUP. MOVED TO MAGNET PICKUP TRIGGER.
         {
-            speaker = "bart";
-            string[] lines = new string[1]
-            {
-                "How convenient..."
-            };
-            StartCoroutine(Multi(lines));
+            queue.Add(("How convenient...", "bart"));
+            
             go.SetActive(false);
         }
         else if (go.Equals(dialogTriggers[7]))//LEGACY. WAS AT WHEEL PICKUP. MOVED TO WHEEL PICKUP TRIGGER.
         {
-            speaker = "bart";
-            string[] lines = new string[1]
-            {
-                "Ooooo shiny"
-            };
-            StartCoroutine(Multi(lines));
+            queue.Add(("Ooooo shiny", "bart"));
+            
             go.SetActive(false);
         }
         else if (go.Equals(dialogTriggers[8]))//AFTER 2ND JUMP
         {
-            speaker = "bart";
-            string[] lines = new string[1]
-            {
-                "Hey, wait up!"
-            };
-            StartCoroutine(Multi(lines));
+            queue.Add(("Hey, wait up", "bart"));
+            
             go.SetActive(false);
         }
         else if (go.Equals(dialogTriggers[9]))//ON BOULDER RELEASE
         {
-            speaker = "bart";
-            string[] lines = new string[1]
-            {
-                "RUN!!!"
-            };
-            StartCoroutine(Multi(lines));
+            queue.Add(("RUN!!!", "bart"));
+            
             go.SetActive(false);
         }
         else if (go.Equals(dialogTriggers[10]))//AFTER ESCAPING BOULDER
         {
-            speaker = "bart";
-            string[] lines = new string[1]
-            {
-                "Whew that was close. Come, we're almost there."
-            };
-            StartCoroutine(Multi(lines));
+            queue.Add(("Whew that was close. Come, we're almost there.", "bart"));
+            
             go.SetActive(false);
         }
         else if (go.Equals(dialogTriggers[11]))//UPON REACHING THE HUB
         {
-            speaker = "bart";
-            string[] lines = new string[3]
-            {
-                "I really need help with a top secret quest and I <i> thought </i> you were the perfect bot to help me.",
-                "Based on how hard it was to get here I have a feeling you'll need some extra parts.",
-                "Explore this facility and see what you can find. I'll wait here."
-            };
-            StartCoroutine(Multi(lines));
+            queue.Add(("I really need help with a top secret quest and I <i> thought </i> you were the perfect bot to help me.", "bart"));
+            queue.Add(("Based on how hard it was to get here I have a feeling you'll need some extra parts.", "bart"));
+            queue.Add(("Explore this facility and see what you can find. I'll wait here.", "bart"));
+            
             go.SetActive(false);
         }
         else if (go.Equals(dialogTriggers[12]))//AT FIRST CHECKPOINT
         {
-            speaker = "player";
-            string[] lines = new string[1]
-            {
-                "A Checkpoint. These will come in handy if I die."
-            };
-            StartCoroutine(Multi(lines));
+            queue.Add(("A Checkpoint. These will come in handy if I die.", "player"));
+            
             go.SetActive(false);
         }
         else if (go.Equals(dialogTriggers[13]))//AT FIRST TP RECEIVER
         {
-            speaker = "player";
-            string[] lines = new string[1]
-            {
-                "Mmmm this looks like a Teleport Receiver. I wonder where the Sender is..."
-            };
-            StartCoroutine(Multi(lines));
+            queue.Add(("Mmmm this looks like a Teleport Receiver. I wonder where the Sender is...", "player"));
+            
             go.SetActive(false);
         }
         else if (go.Equals(dialogTriggers[14]))//AT FIRST TP SENDER
         {
-            speaker = "player";
-            string[] lines = new string[1]
-            {
-                "Ah, this should send be back to the Receiver if I activate it with [UP]."
-            };
-            StartCoroutine(Multi(lines));
+            queue.Add(("Ah, this should send be back to the Receiver if I activate it with [UP].", "player"));
             go.SetActive(false);
         }
         else if (go.Equals(dialogTriggers[15]))//AT HARD JUMP SECTION
         {
-            speaker = "player";
-            string[] lines = new string[1]
-            {
-                "This could be challenging..."
-            };
-            StartCoroutine(Multi(lines));
+            queue.Add(("This could be challenging...", "player"));
             go.SetActive(false);
         }
         else if (go.Equals(pickups[0]))//LEG PICKUP
         {
-            speaker = "player";
-            string[] lines = new string[1]
-            {
-                "With these legs attached I bet I could climb up those stairs"
-            };
-            StartCoroutine(Multi(lines));
+            queue.Add(("With these legs attached I bet I could climb up those stairs", "player"));
             go.SetActive(false);
         }
         else if (go.Equals(pickups[1]))//SPRING PICKUP
         {
-            speaker = "player";
-            string[] lines = new string[1]
-            {
-                "If I upgrade my legs with these springs, using my inventory, I bet I could jump high and wide using [C]"
-            };
-            StartCoroutine(Multi(lines));
+            queue.Add(("If I upgrade my legs with these springs, using my inventory, I bet I could jump high and wide using [C]", "player"));
             go.SetActive(false);
         }
         else if (go.Equals(pickups[2]))//ARM PICKUP
         {
-            speaker = "player";
-            string[] lines = new string[1]
-            {
-                "These should help me get up that ladder using [UP]..."
-            };
-            StartCoroutine(Multi(lines));
+            queue.Add(("These should help me get up that ladder using [UP]...", "player"));
             go.SetActive(false);
         }
         else if (go.Equals(pickups[3]))//MAGNET PICKUP
         {
-            speaker = "player";
-            string[] lines = new string[2]
-            {
-                "Magnets on my hands? Prehaps I could cling onto the ceiling by pressing [X]",
-                "How convenient..."
-            };
-            StartCoroutine(Multi(lines));
+            queue.Add(("Magnets on my hands? Prehaps I could cling onto the ceiling by pressing [X]", "player"));
+            queue.Add(("How convenient...", "bart"));
+            
             go.SetActive(false);
         }
         else if (go.Equals(pickups[4]))//WHEEL PICKUP
         {
-            speaker = "player";
-            string[] lines = new string[2]
-            {
-                "I can move super fast with these wheels by holding [C]. Woah, is that a jump?",
-                "Ooooo shiny"
-            };
-            StartCoroutine(Multi(lines));
+            queue.Add(("I can move super fast with these wheels by holding [C]. Woah, is that a jump?", "player"));
+            queue.Add(("Ooooo shiny", "bart"));
+            
             go.SetActive(false);
         }
-
 
     }
 
     void Show()
     {
         dialogPanel.gameObject.SetActive(true);
-        showing = true;
+        //showing = true;
     }
 
     void Hide()
     {
         dialogPanel.gameObject.SetActive(false);
-        showing = false;
+        //showing = false;
     }
 
-    IEnumerator Multi(string[] lines)
+    IEnumerator Speak(string line, string speaker)
     {
-        foreach (string line in lines)
-        {
-            Show();
-            CheckSpecialAction(line);
-            dialogText.text = line;
-            yield return new WaitForSeconds(dialogTimer);
-            Hide();
-        }
+        speaking = true;
+        this.speaker = speaker;
+        CheckSpecialAction(line);
+        dialogText.text = line;
+        yield return new WaitForSeconds(dialogTimer);
+        speaking = false;
     }
 
     IEnumerator FlashText()
@@ -326,7 +261,6 @@ public class DialogDriver : MonoBehaviour
         }
         else if (line == "Hi! I’m Bart, thanks to me you can now see and hear! You seem somewhat capable. Follow me!")
         {
-            speaker = "bart";
             bart.GetComponent<Bart>().SetTarget(new Vector2(50, -2.5f));
             player.GetComponent<PlayerMovement>().setMovement(true);
         }
@@ -341,7 +275,7 @@ public class DialogDriver : MonoBehaviour
         }
         else if (line == "Are you struggling with the stairs? Here, these might help.")
         {
-            StartCoroutine(ThrowItem(pickups[0], bart.transform.position, -1));
+            StartCoroutine(ThrowItem(pickups[0], bart.transform.position, -1, 5));
         }
         else if (line == "Stuck again!")
         {
@@ -349,7 +283,8 @@ public class DialogDriver : MonoBehaviour
         }
         else if (line == "I'll do the heavy lifting again but this is the last time!")
         {
-            StartCoroutine(ThrowItem(pickups[1], bart.transform.position, -1));
+            Debug.Log("Throw Springs");
+            StartCoroutine(ThrowItem(pickups[1], bart.transform.position, -1, 7));
         }
         else if (line == "If I upgrade my legs with these springs, using my inventory, I bet I could jump high and wide using [C]")
         {
@@ -363,14 +298,6 @@ public class DialogDriver : MonoBehaviour
         else if (line == "Finally... Right then, come along.")
         {
             bart.GetComponent<Bart>().SetFollowing(true);
-        }
-        else if (line == "How convenient...")
-        {
-            speaker = "bart";
-        }
-        else if (line == "Ooooo shiny")
-        {
-            speaker = "bart";
         }
     }
 
@@ -388,7 +315,7 @@ public class DialogDriver : MonoBehaviour
         }
     }
 
-    IEnumerator ThrowItem(GameObject item, Vector2 from, float direction)
+    IEnumerator ThrowItem(GameObject item, Vector2 from, float direction, float throwSpeed)
     {
         yield return new WaitForSeconds(2.5f);
         //pickups[0].transform.position = bart.transform.position;
@@ -397,7 +324,6 @@ public class DialogDriver : MonoBehaviour
         item.SetActive(true);
         Rigidbody2D rb = item.GetComponent<Rigidbody2D>();
 
-        float throwSpeed = 5;
         rb.gravityScale = 1;
         rb.velocity = new Vector2(direction * throwSpeed, rb.velocity.y + throwSpeed);
     }
