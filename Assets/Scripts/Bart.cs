@@ -26,6 +26,7 @@ public class Bart : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        transform.position = player.transform.position;
         currentIndex = 0;
         spriteRenderer.sprite = normal[0];
         currentSprite = normal[0];

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Cinemachine;
 using Image = UnityEngine.UI.Image;
 using TMPro;
 
@@ -18,7 +19,7 @@ public class DialogDriver : MonoBehaviour
     public float flashSpeed;
     public GameObject speakerImage;
     public CanvasGroup blackScreen;
-
+    public CinemachineVirtualCamera playerCamera;
     private bool speaking;
     private bool flashing;
     private string speaker;
@@ -29,6 +30,7 @@ public class DialogDriver : MonoBehaviour
     {
         Hide();
         StartCoroutine(FlashText());
+        
     }
 
     private void Update()
@@ -166,6 +168,7 @@ public class DialogDriver : MonoBehaviour
             queue.Add(("I really need help with a top secret quest and I <i> thought </i> you were the perfect bot to help me.", "bart"));
             queue.Add(("Based on how hard it was to get here I have a feeling you'll need some extra parts.", "bart"));
             queue.Add(("Explore this facility and see what you can find. I'll wait here.", "bart"));
+            queue.Add(("Store any parts you don't need here. Don't forget you can only carry 3 unequipped parts.", "bart"));
             
             go.SetActive(false);
         }
@@ -267,6 +270,7 @@ public class DialogDriver : MonoBehaviour
         else if (line == "What are you doing down there? Come on we have to go!")
         {
             bart.GetComponent<SpriteRenderer>().flipX = true;
+            
         }
         else if (line == "With these legs attached I bet I could climb up those stairs")
         {
@@ -299,6 +303,10 @@ public class DialogDriver : MonoBehaviour
         {
             bart.GetComponent<Bart>().SetFollowing(true);
         }
+        else if (line == "Explore this facility and see what you can find. I'll wait here.")
+        {
+            StartCoroutine(PanCamera(12, 80, 3, 1));
+        }
     }
 
     IEnumerator FadeIn()
@@ -326,5 +334,25 @@ public class DialogDriver : MonoBehaviour
 
         rb.gravityScale = 1;
         rb.velocity = new Vector2(direction * throwSpeed, rb.velocity.y + throwSpeed);
+    }
+
+    IEnumerator PanCamera(float speed, float offsetX, float holdTime, int direction)
+    {
+        player.GetComponent<PlayerMovement>().setMovement(false);
+        bool panning = true;
+        while (panning)
+        {
+            //camera.GetComponent<CinemachineVirtualCamera>().body
+
+            playerCamera.GetCinemachineComponent<CinemachineFramingTransposer>().m_TrackedObjectOffset.x += direction;
+            if (playerCamera.GetCinemachineComponent<CinemachineFramingTransposer>().m_TrackedObjectOffset == new Vector3(offsetX, 0, 0))
+            {
+                panning = false;
+            }
+            yield return new WaitForSeconds(speed / offsetX);
+        }
+        yield return new WaitForSeconds(holdTime);
+        playerCamera.GetCinemachineComponent<CinemachineFramingTransposer>().m_TrackedObjectOffset = Vector3.zero;
+        player.GetComponent<PlayerMovement>().setMovement(true);
     }
 }
