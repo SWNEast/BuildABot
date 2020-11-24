@@ -13,7 +13,6 @@ public class UIInventory : MonoBehaviour {
     public Transform storagePanelLegs;
     public Transform storagePanelArms;
     public Transform charPanel;
-    //public Equipped equipped;
 
     private void Awake() {
         for (int i = 0; i < 3; i++) {

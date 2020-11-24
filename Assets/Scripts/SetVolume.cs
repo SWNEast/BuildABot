@@ -32,4 +32,8 @@ public class SetVolume : MonoBehaviour {
     {
         musicVolume = vol;
     }
+
+    public void Mute() {
+        musicVolume = 0;
+    }
 }

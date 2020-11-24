@@ -52,6 +52,10 @@ public class PlayerMovement : MonoBehaviour
     public AudioSource pickupNoise;
     public AudioSource checkpointNoise;
     public AudioSource negativeNoise;
+    public AudioSource jumpNoise;
+    public AudioSource ladderNoise;
+    public Transform tutPanel1;
+    public Transform tutPanel2;
 
 
 
@@ -72,6 +76,8 @@ public class PlayerMovement : MonoBehaviour
         legsTut.gameObject.SetActive(false);
         springsTut.gameObject.SetActive(false);
         armsTut.gameObject.SetActive(false);
+        tutPanel1.gameObject.SetActive(false);
+        tutPanel2.gameObject.SetActive(false);
     }
 
     private void Update()
@@ -271,6 +277,8 @@ public class PlayerMovement : MonoBehaviour
         } else if (go.CompareTag("Ladder") && armsEquipped)
         {
             canClimb = true;
+            ladderNoise.loop = true;
+            ladderNoise.Play();
         } else if (go.CompareTag("Spring Pickup"))
         {
             pickupNoise.Play();
@@ -280,6 +288,7 @@ public class PlayerMovement : MonoBehaviour
             inventory.foundItem(14);
             go.SetActive(false);
             springsEquipped = true;
+            tutPanel1.gameObject.SetActive(true);
             NewItemAnimation();
         } else if (go.CompareTag("Arm Pickup"))
         {
@@ -322,6 +331,7 @@ public class PlayerMovement : MonoBehaviour
         GameObject go = collision.gameObject;
         if (go.CompareTag("Ladder"))
         {
+            ladderNoise.Stop();
             canClimb = false;
         } else if (go.CompareTag("Magnet"))
         {
@@ -334,6 +344,7 @@ public class PlayerMovement : MonoBehaviour
 
     void Jump()
     {
+        jumpNoise.Play();
         Vector2 movement = new Vector2(rb.velocity.x, jumpForce);
         rb.velocity = movement;
         jumping = false;

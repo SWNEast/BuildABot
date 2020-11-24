@@ -7,6 +7,7 @@ public class Teleport : MonoBehaviour
     public GameObject receiver;
 
     private bool teleportEnabled = false;
+    public AudioSource teleportSound;
 
     private void Update()
     {
@@ -17,6 +18,7 @@ public class Teleport : MonoBehaviour
             }
             else
             {
+                teleportSound.Play();
                 GameObject.FindGameObjectWithTag("Player").transform.position = receiver.transform.position;
             }
         } 

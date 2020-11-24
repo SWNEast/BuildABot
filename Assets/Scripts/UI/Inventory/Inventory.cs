@@ -12,17 +12,24 @@ public class Inventory : MonoBehaviour {
     public Transform optionsMenu;
     public Transform menu;
     public AudioSource music;
-    public AudioSource soundEffects;
     public AudioSource openMenu;
+    public AudioSource buttonSounds;
+    public AudioSource magnetNoise;
+    public AudioSource positiveNoise;
+    public AudioSource openNoise;
+    public AudioSource clickSound;
+    public AudioSource checkpointNoise;
+    public AudioSource negativeSound;
+    public AudioSource jumpSound;
+    public AudioSource ladderSound;
+    public AudioSource teleportSound;
 
     private void Start() {
         menu.gameObject.SetActive(false);
         inventoryUI.gameObject.SetActive(false);
         panel.gameObject.SetActive(false);
         optionsMenu.gameObject.SetActive(false);
-        Debug.Log(PlayerPrefs.GetFloat("MusicVolume"));
-        music.volume = PlayerPrefs.GetFloat("MusicVolume");
-        soundEffects.volume = PlayerPrefs.GetFloat("SEVolume");
+        setVolumes();        
         giveItem(0);
         for (int i=1; i<itemList.items.Count; i++) {
             if (i % 2 != 0) { giveItem(i); }
@@ -76,5 +83,19 @@ public class Inventory : MonoBehaviour {
                 panel.gameObject.SetActive(false);
             }
         }
+    }
+
+    private void setVolumes() {
+        music.volume = PlayerPrefs.GetFloat("MusicVolume");
+        buttonSounds.volume = PlayerPrefs.GetFloat("SEVolume");
+        magnetNoise.volume = PlayerPrefs.GetFloat("SEVolume");
+        positiveNoise.volume = PlayerPrefs.GetFloat("SEVolume");
+        openNoise.volume = PlayerPrefs.GetFloat("SEVolume");
+        clickSound.volume = PlayerPrefs.GetFloat("SEVolume");
+        checkpointNoise.volume = PlayerPrefs.GetFloat("SEVolume");
+        negativeSound.volume = PlayerPrefs.GetFloat("SEVolume");
+        jumpSound.volume = (PlayerPrefs.GetFloat("SEVolume")/2);
+        ladderSound.volume = PlayerPrefs.GetFloat("SEVolume");
+        teleportSound.volume = PlayerPrefs.GetFloat("SEVolume");
     }
 }

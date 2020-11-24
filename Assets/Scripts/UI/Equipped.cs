@@ -26,7 +26,7 @@ public class Equipped : MonoBehaviour {
             Debug.Log(imgPath);
             Sprite spr = Resources.Load<Sprite>(imgPath);
             image.color = Color.white;
-            image.sprite = spr;//item.icon;
+            image.sprite = spr;
         } else {
             image.color = Color.clear;
         }
