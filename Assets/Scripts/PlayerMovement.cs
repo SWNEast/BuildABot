@@ -36,12 +36,16 @@ public class PlayerMovement : MonoBehaviour
     private bool isGrounded = false;
     private bool canMove = false;
     private bool legsEquipped = false;
+    private int legIndex = 0;
+    private bool legWaiting = false;
+    private float legWaitTime = 0.1f;
     private bool springsEquipped = false;
     private bool jumping = false;
     private bool armsEquipped = false;
     private bool canClimb = false;
     private bool magnetsEquipped = false;
     private bool canMagnet = false;
+    private bool magnetOn = false;
     private bool wheelsEquipped = false;
     private float speedBoost = 0;
     private bool onRamp = false;
@@ -91,16 +95,8 @@ public class PlayerMovement : MonoBehaviour
         wheelsEquipped = equipped.isEquipped(16);
         magnetsEquipped = equipped.isEquipped(22);
 
-        Vector3 direction = transform.position - lastPosition;
-        Vector3 localDirection = transform.InverseTransformDirection(direction);
-        lastPosition = transform.position;
-        if (localDirection.x < 0)
-        {
-            FaceLeft();
-        } else if (localDirection.x > 0)
-        {
-            FaceRight();
-        }
+        UpdateSprites();
+        
 
         if (PlayerIsOnGround())
         {
@@ -330,6 +326,7 @@ public class PlayerMovement : MonoBehaviour
         } else if (go.CompareTag("Magnet"))
         {
             canMagnet = false;
+            magnetOn = false;
             rb.gravityScale = 1.0f;
             tipText.gameObject.SetActive(false);
         }
@@ -404,13 +401,15 @@ public class PlayerMovement : MonoBehaviour
     {
         if (canMagnet)
         {
-            if (rb.gravityScale.Equals(0.0f)) //Magnet on
+            if (magnetOn) //Magnet on
             {
+                magnetOn = false;
                 rb.gravityScale = 1.0f;
                 tipText.gameObject.SetActive(false);
             }
             else
             {
+                magnetOn = true;
                 rb.gravityScale = 0.0f;
                 rb.velocity = new Vector2(rb.velocity.x, 0.0f);
                 tipText.gameObject.SetActive(true);
@@ -435,26 +434,96 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    void FaceRight()
+    void UpdateSprites()
     {
-        facingRight = true;
-        bodyRenderer.sprite = bodySprites[0];
+        Vector3 direction = transform.position - lastPosition;
+        Vector3 localDirection = transform.InverseTransformDirection(direction);
+        lastPosition = transform.position;
+        if (localDirection.x < 0)
+        {
+            facingRight = false;
+            bodyRenderer.sprite = bodySprites[1];
+        }
+        else if (localDirection.x > 0)
+        {
+            facingRight = true;
+            bodyRenderer.sprite = bodySprites[0];
+        }
+
         if (armsEquipped)
         {
-            armsRenderer.sprite = armSprites[0];
-            armsRenderer.gameObject.transform.localPosition = new Vector2(0.03f, - 0.01f);
+            if (magnetsEquipped && magnetOn)
+            {
+                armsRenderer.sprite = armSprites[4];
+                armsRenderer.gameObject.transform.localPosition = new Vector2(0, 0.03f);
+            }
+            else if (magnetsEquipped && facingRight)
+            {
+                armsRenderer.sprite = armSprites[2];
+                armsRenderer.gameObject.transform.localPosition = new Vector2(0.03f, -0.01f);
+            }
+            else if (magnetsEquipped)
+            {
+                armsRenderer.sprite = armSprites[3];
+                armsRenderer.gameObject.transform.localPosition = new Vector2(-0.03f, -0.01f);
+            } 
+            else if (facingRight)
+            {
+                armsRenderer.sprite = armSprites[0];
+                armsRenderer.gameObject.transform.localPosition = new Vector2(0.03f, -0.01f);
+            }
+            else
+            {
+                armsRenderer.sprite = armSprites[1];
+                armsRenderer.gameObject.transform.localPosition = new Vector2(-0.03f, -0.01f);
+            }
+        }
+
+        if (legsEquipped)
+        {
+            int indexModifer;
+            if (wheelsEquipped)
+            {
+                indexModifer = 9;
+            } 
+            else if (springsEquipped)
+            {
+                indexModifer = 4;
+            }
+            else
+            {
+                indexModifer = 0;
+            }
+
+            if (!PlayerIsOnGround() && springsEquipped)
+            {
+                legsRenderer.sprite = legSprites[8];
+            }
+            else if (!PlayerIsOnGround())
+            {
+                legsRenderer.sprite = legSprites[indexModifer];
+            }
+            else if (!legWaiting && rb.velocity != Vector2.zero)
+            {
+                StartCoroutine(NextLeg(indexModifer));
+            } else if (!legWaiting) {
+                legsRenderer.sprite = legSprites[indexModifer];
+            }
         }
     }
 
-    void FaceLeft()
+    IEnumerator NextLeg(int indexModifier)
     {
-        facingRight = false;
-        bodyRenderer.sprite = bodySprites[1];
-        if (armsEquipped)
+        legWaiting = true;
+        yield return new WaitForSeconds(legWaitTime);
+        legIndex += 1;
+        if (legIndex == 4)
         {
-            armsRenderer.sprite = armSprites[1];
-            armsRenderer.gameObject.transform.localPosition = new Vector2(-0.03f, - 0.01f);
+            legIndex = 0;
         }
+        legsRenderer.sprite = legSprites[legIndex + indexModifier];
+        //spriteRenderer.sprite = currentSprite;
+        legWaiting = false;
     }
 
     void NewItemAnimation()
