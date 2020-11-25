@@ -39,7 +39,7 @@ public class PlayerMovement : MonoBehaviour
     private int legIndex = 0;
     private bool legWaiting = false;
     private float legWaitTime = 0.1f;
-    private bool springsEquipped = false;
+    public bool springsEquipped = false;
     private bool jumping = false;
     private bool armsEquipped = false;
     private bool canClimb = false;
@@ -63,8 +63,7 @@ public class PlayerMovement : MonoBehaviour
     //public Transform tutPanel1;
     //public Transform tutPanel2;
     public GameObject invBox;
-
-
+    public bool inHub = false;
 
     private void Start()
     {
@@ -549,5 +548,9 @@ public class PlayerMovement : MonoBehaviour
     public bool getFacingRight()
     {
         return facingRight;
+    }
+
+    public void backToHub() {
+        this.gameObject.transform.position = new Vector3(287.97f, -2.93f, 0f);
     }
 }

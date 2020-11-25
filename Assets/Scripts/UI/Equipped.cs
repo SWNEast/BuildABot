@@ -9,6 +9,7 @@ public class Equipped : MonoBehaviour {
     public Transform bodyPanel;
     public Transform legsPanel;
     public Transform armsPanel;
+    public PlayerMovement player;
 
     public void EquipItem(Item item, int bodyPart) {
         Image image = null;
@@ -28,7 +29,8 @@ public class Equipped : MonoBehaviour {
             image.color = Color.white;
             image.sprite = spr;
         } else {
-            image.color = Color.clear;
+            image.sprite = Resources.Load<Sprite>("Temp-Images/panel_blue");
+            //image.color = Color.clear;
         }
     }
 
@@ -38,5 +40,9 @@ public class Equipped : MonoBehaviour {
                 if (i.id == id) { return true; }
         }
         return false;
+    }
+
+    public bool inHub() {
+        return player.inHub;
     }
 }

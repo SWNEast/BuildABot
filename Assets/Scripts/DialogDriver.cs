@@ -27,6 +27,13 @@ public class DialogDriver : MonoBehaviour
     private string speaker;
     private List<(string, string)> queue = new List<(string, string)>();
     private bool isColliding;
+    public Transform storageTutPanel;
+    public Transform invTutPanel;
+    public Transform charTutPanel;
+    public Transform springTutPanel;
+    public Transform equipTutPanel;
+    public PlayerMovement playerMv;
+    private bool checkInvTut = false;
 
     private void Start()
     {
@@ -38,6 +45,13 @@ public class DialogDriver : MonoBehaviour
     private void Update()
     {
         isColliding = false;
+
+        if (checkInvTut) {
+            if(Input.GetKeyDown(KeyCode.I)){ 
+                inventoryTutorial(); 
+                checkInvTut = false;
+            }
+        }
 
         if (Input.GetKeyDown(KeyCode.V) && speaking)
         {
@@ -182,7 +196,7 @@ public class DialogDriver : MonoBehaviour
             queue.Add(("Based on how hard it was to get here I have a feeling you'll need some extra parts.", "bart"));
             queue.Add(("Explore this facility and see what you can find. I'll wait here.", "bart"));
             queue.Add(("Store any parts you don't need in the hub. You can only carry 3 extra parts with you.", "bart"));
-
+            playerMv.inHub = true;
             go.SetActive(false);
         }
         else if (go.Equals(dialogTriggers[12]))//AT FIRST CHECKPOINT
@@ -216,6 +230,7 @@ public class DialogDriver : MonoBehaviour
         {
             queue.Add(("If I upgrade my legs with these springs I bet I could jump high and wide using [X]", "player"));
             queue.Add(("If I open my inventory with [i] I can equip them there.", "player"));
+            checkInvTut = true;
             go.SetActive(false);
         }
         else if (go.Equals(pickups[2]))//ARM PICKUP
@@ -331,6 +346,22 @@ public class DialogDriver : MonoBehaviour
             //boulderBlock.SetActive(false);
             //boulderTrigger.SetActive(false);
         }
+        else if (line == "This is my storage panel, it shows all the parts I can collect. I can access this in the main hub") {
+            storageTutPanel.GetComponent<InvTutorial>().startBlink();
+        }
+        else if (line == "These are the parts currently in my inventory, I can equip and use these whenever I want") {
+            storageTutPanel.GetComponent<InvTutorial>().StopBlink();
+            invTutPanel.GetComponent<InvTutorial>().startBlink();
+        }
+        else if (line == "Looks like I can equip these springs by clicking them, then clicking on my Legs slot in the Character section") {
+            invTutPanel.GetComponent<InvTutorial>().StopBlink();
+            springTutPanel.GetComponent<InvTutorial>().startBlink();
+            equipTutPanel.GetComponent<InvTutorial>().startBlink();
+        }
+        else if (line == "Ahh, now I feel ready to jump! I just need to close my inventory and I'm all set!") {
+            springTutPanel.GetComponent<InvTutorial>().StopBlink();
+            equipTutPanel.GetComponent<InvTutorial>().StopBlink();
+        }
     }
 
     IEnumerator FadeIn()
@@ -389,5 +420,13 @@ public class DialogDriver : MonoBehaviour
     public void Say(string line, string speaker)
     {
         queue.Add((line, speaker));
+    }
+
+    private void inventoryTutorial() {
+        isColliding = true;
+        queue.Add(("This is my storage panel, it shows all the parts I can collect. I can access this in the main hub", "player"));
+        queue.Add(("These are the parts currently in my inventory, I can equip and use these whenever I want", "player"));
+        queue.Add(("Looks like I can equip these springs by clicking them, then clicking on my Legs slot in the Character section", "player"));
+        queue.Add(("Ahh, now I feel ready to jump! I just need to close my inventory and I'm all set!", "player"));
     }
 }
