@@ -19,16 +19,16 @@ public class Teleport : MonoBehaviour
         dd = player.GetComponent<DialogDriver>();
         if (!active)
         {
-            GetComponent<SpriteRenderer>().color = new Color(65, 65, 65, 255);
+            gameObject.GetComponent<SpriteRenderer>().color = new Color(0.254902f, 0.254902f, 0.254902f, 1);
         }
     }
     private void Update()
     {
 
-        if (!active)
+        /*if (!active)
         {
-            GetComponent<SpriteRenderer>().color = new Color(65, 65, 65, 255);
-        }
+            gameObject.GetComponent<SpriteRenderer>().color = new Color(65, 65, 65, 255);
+        }*/
 
         if ((Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.W)) && teleportEnabled) {
             if (!active)
