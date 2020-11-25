@@ -134,7 +134,7 @@ public class DialogDriver : MonoBehaviour
         }
         else if (go.Equals(dialogTriggers[5]))//AFTER DROPPING AT FIRST MAGNET
         {
-            queue.Add(("This is getting ridiculous now.", "bart"));
+            queue.Add(("We need to cross that gap.", "bart"));
             queue.Add(("I really have picked the most inept robot.", "bart"));
             queue.Add(("There must be something nearby that can help.", "bart"));
 
@@ -290,7 +290,7 @@ public class DialogDriver : MonoBehaviour
             bart.GetComponent<SpriteRenderer>().flipX = true;
 
         }
-        else if (line == "With these legs attached I bet I could climb up those stairs")
+        else if (line == "I should be able to climb the stairs now.")
         {
             bart.GetComponent<SpriteRenderer>().flipX = false;
             bart.GetComponent<Bart>().SetTarget(new Vector2(92.5f, -2.5f));
@@ -299,11 +299,11 @@ public class DialogDriver : MonoBehaviour
         {
             StartCoroutine(ThrowItem(pickups[0], -1, 5));
         }
-        else if (line == "Stuck again!")
+        else if (line == "Are you stuck again!")
         {
             bart.GetComponent<SpriteRenderer>().flipX = true;
         }
-        else if (line == "I'll do the heavy lifting again but this is the last time!")
+        else if (line == "I'll do the heavy lifting once more but this is the last time!")
         {
             Debug.Log("Throw Springs");
             StartCoroutine(ThrowItem(pickups[1], -1, 7));
@@ -313,7 +313,7 @@ public class DialogDriver : MonoBehaviour
             bart.GetComponent<SpriteRenderer>().flipX = false;
             bart.GetComponent<Bart>().SetTarget(new Vector2(129.5f, -2.5f));
         }
-        else if (line == "YOU KNOW WHAT! I'LL WAIT FOR YOU UP HERE. FIGURE IT OUT!")
+        else if (line == "I'm going on ahead. FIGURE IT OUT!")
         {
             bart.GetComponent<Bart>().SetTarget(new Vector2(129.5f, 21.5f));
         }

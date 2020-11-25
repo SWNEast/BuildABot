@@ -325,7 +325,7 @@ public class PlayerMovement : MonoBehaviour
             canMagnet = false;
             magnetOn = false;
             rb.gravityScale = 1.0f;
-            tipText.gameObject.SetActive(false);
+            //tipText.gameObject.SetActive(false);
         }
         
     }
@@ -402,14 +402,14 @@ public class PlayerMovement : MonoBehaviour
             {
                 magnetOn = false;
                 rb.gravityScale = 1.0f;
-                tipText.gameObject.SetActive(false);
+                //tipText.gameObject.SetActive(false);
             }
             else
             {
                 magnetOn = true;
                 rb.gravityScale = 0.0f;
                 rb.velocity = new Vector2(rb.velocity.x, 0.0f);
-                tipText.gameObject.SetActive(true);
+                //tipText.gameObject.SetActive(true);
             }
         }
     }
