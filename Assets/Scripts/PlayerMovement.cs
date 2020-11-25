@@ -49,9 +49,6 @@ public class PlayerMovement : MonoBehaviour
     private GameObject boulderBlock;
     private GameObject boulderTrigger;
     private Vector2 boulderSpawn;
-    //public Transform legsTut;
-    //public Transform springsTut;
-    //public Transform armsTut;
     public Equipped equipped;
     public AudioSource magnetNoise;
     public AudioSource pickupNoise;
@@ -61,6 +58,7 @@ public class PlayerMovement : MonoBehaviour
     public AudioSource ladderNoise;
     //public Transform tutPanel1;
     //public Transform tutPanel2;
+    public GameObject invBox;
 
 
 
@@ -78,9 +76,6 @@ public class PlayerMovement : MonoBehaviour
         boulderTrigger = GameObject.FindGameObjectWithTag("Boulder Trigger");
         boulderSpawn = boulder.transform.position;
 
-        //legsTut.gameObject.SetActive(false);
-        //springsTut.gameObject.SetActive(false);
-        //armsTut.gameObject.SetActive(false);
         //tutPanel1.gameObject.SetActive(false);
         //tutPanel2.gameObject.SetActive(false);
     }
@@ -283,6 +278,8 @@ public class PlayerMovement : MonoBehaviour
             go.SetActive(false);
             springsEquipped = true;
             //tutPanel1.gameObject.SetActive(true);
+            invBox.GetComponent<Renderer>().enabled = false;
+            invBox.GetComponent<Renderer>().GetComponent<BoxCollider2D>().enabled = false;
             NewItemAnimation();
         } else if (go.CompareTag("Arm Pickup"))
         {
