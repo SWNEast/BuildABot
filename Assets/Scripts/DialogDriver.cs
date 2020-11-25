@@ -384,4 +384,9 @@ public class DialogDriver : MonoBehaviour
         playerCamera.GetCinemachineComponent<CinemachineFramingTransposer>().m_TrackedObjectOffset = Vector3.zero;
         player.GetComponent<PlayerMovement>().setMovement(true);
     }
+
+    public void Say(string line, string speaker)
+    {
+        queue.Add((line, speaker));
+    }
 }
