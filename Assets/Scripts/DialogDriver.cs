@@ -112,17 +112,17 @@ public class DialogDriver : MonoBehaviour
         else if (go.Equals(dialogTriggers[2]))//FIRST GAP
         {
             go.SetActive(false);
-            Debug.Log("Added to queue");
-            queue.Add(("Stuck again!", "bart"));
-            queue.Add(("I'll do the heavy lifting again but this is the last time!", "bart"));
+            //Debug.Log("Added to queue");
+            queue.Add(("Are you stuck again!", "bart"));
+            queue.Add(("I'll do the heavy lifting once more but this is the last time!", "bart"));
 
 
         }
         else if (go.Equals(dialogTriggers[3]))//FIRST LADDER
         {
             queue.Add(("Right, just up here we go", "bart"));
-            queue.Add(("YOU HAVE TO BE KIDDING ME", "bart"));
-            queue.Add(("YOU KNOW WHAT! I'LL WAIT FOR YOU UP HERE. FIGURE IT OUT!", "bart"));
+            queue.Add(("Let me guess, you can't climb either.", "bart"));
+            queue.Add(("I'm going on ahead. FIGURE IT OUT!", "bart"));
 
             go.SetActive(false);
         }
@@ -181,7 +181,7 @@ public class DialogDriver : MonoBehaviour
             queue.Add(("I really need help with a top secret quest and I <i> thought </i> you were the perfect bot to help me.", "bart"));
             queue.Add(("Based on how hard it was to get here I have a feeling you'll need some extra parts.", "bart"));
             queue.Add(("Explore this facility and see what you can find. I'll wait here.", "bart"));
-            queue.Add(("Store any parts you don't need here. Don't forget you can only carry 3 unequipped parts.", "bart"));
+            queue.Add(("Store any parts you don't need in the hub. You can only carry 3 extra parts with you.", "bart"));
 
             go.SetActive(false);
         }
@@ -193,13 +193,13 @@ public class DialogDriver : MonoBehaviour
         }
         else if (go.Equals(dialogTriggers[13]))//AT FIRST TP RECEIVER
         {
-            queue.Add(("Mmmm this looks like a Teleport Receiver. I wonder where the Sender is...", "player"));
+            queue.Add(("Mmmm this looks like a Teleport Receiver. I wonder where the sender is...", "player"));
 
             go.SetActive(false);
         }
         else if (go.Equals(dialogTriggers[14]))//AT FIRST TP SENDER
         {
-            queue.Add(("Ah, this should send be back to the Receiver if I activate it with [UP].", "player"));
+            queue.Add(("Ah, this should send be back to the receiver if I activate it with [UP].", "player"));
             go.SetActive(false);
         }
         else if (go.Equals(dialogTriggers[15]))//AT HARD JUMP SECTION
@@ -209,7 +209,7 @@ public class DialogDriver : MonoBehaviour
         }
         else if (go.Equals(pickups[0]))//LEG PICKUP
         {
-            queue.Add(("With these legs attached I bet I could climb up those stairs", "player"));
+            queue.Add(("I should be able to climb the stairs now.", "player"));
             go.SetActive(false);
         }
         else if (go.Equals(pickups[1]))//SPRING PICKUP
@@ -327,8 +327,9 @@ public class DialogDriver : MonoBehaviour
         }
         else if (line == "RUN!!!")
         {
-            boulderBlock.SetActive(false);
-            boulderTrigger.SetActive(false);
+            boulderBlock.GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, 0);
+            //boulderBlock.SetActive(false);
+            //boulderTrigger.SetActive(false);
         }
     }
 
