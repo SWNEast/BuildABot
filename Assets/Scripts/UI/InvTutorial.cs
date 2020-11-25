@@ -18,7 +18,8 @@ public class InvTutorial : MonoBehaviour {
     }
 
     private void showHide() {
-        gameObject.SetActive(this.enabled = !this.enabled);
+        //gameObject.SetActive(this.enabled = !this.enabled);
+        gameObject.SetActive(false);
     }
 
     private void startBlink() {

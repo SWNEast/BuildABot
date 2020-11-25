@@ -45,11 +45,20 @@ public class UIItem : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler,
         if (this.item != null) {                                // If the player clicks on an actual item:
             if (this.slot >= 15 && this.item.id > 4) {
                 if (selectedItem.item != null) {                        // If there was already a selected item, clone it and replace it with the item clicked on
-                    Item clone = new Item(selectedItem.item); 
-                    selectedItem.UpdateItem(this.item);
-                    UpdateItem(clone);                                  // Puts the cloned item in the place of where the old item used to be
-                    Debug.Log(slot);
-                    if (this.slot >= 18) { equipped.EquipItem(clone, slot); }
+                    Item clone = new Item(selectedItem.item);                           // Puts the cloned item in the place of where the old item used to be
+                    if (this.slot >= 18) { 
+                        if ((slot-18) == selectedItem.item.category) {
+                            selectedItem.UpdateItem(this.item);
+                            UpdateItem(clone);
+                            equipped.EquipItem(clone, slot);
+                            selectedItem.UpdateItem(null);
+                        }
+                    } else {
+                        selectedItem.UpdateItem(this.item);
+                        UpdateItem(clone);
+                        equipped.EquipItem(clone, slot);
+                        selectedItem.UpdateItem(null);
+                    }
                 } else {
                     selectedItem.UpdateItem(this.item);             // If there wasn't a selected item, just select this item and replace it with nothing
                     UpdateItem(null);
