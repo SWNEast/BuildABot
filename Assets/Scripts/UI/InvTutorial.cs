@@ -10,19 +10,19 @@ public class InvTutorial : MonoBehaviour {
 
     void Start() {
         this.enabled = false;
-        startBlink();
     }
 
-    void Update() {
-        if (Input.GetKeyDown(KeyCode.Space)) { CancelInvoke(); click.Play(); this.enabled = false; }
+    public void StopBlink() {
+        CancelInvoke(); 
+        click.Play(); 
+        this.enabled = false;
     }
 
     private void showHide() {
-        //gameObject.SetActive(this.enabled = !this.enabled);
-        gameObject.SetActive(false);
+        gameObject.SetActive(this.enabled = !this.enabled);
     }
 
-    private void startBlink() {
+    public void startBlink() {
         if (isBlinking) { return; }
         else {
             isBlinking = true;

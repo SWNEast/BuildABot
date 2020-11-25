@@ -39,7 +39,7 @@ public class PlayerMovement : MonoBehaviour
     private int legIndex = 0;
     private bool legWaiting = false;
     private float legWaitTime = 0.1f;
-    private bool springsEquipped = false;
+    public bool springsEquipped = false;
     private bool jumping = false;
     private bool armsEquipped = false;
     private bool canClimb = false;
@@ -518,7 +518,7 @@ public class PlayerMovement : MonoBehaviour
         {
             legIndex = 0;
         }
-        legsRenderer.sprite = legSprites[legIndex + indexModifier];
+        legsRenderer.sprite = legSprites[legIndex];// + indexModifier];
         //spriteRenderer.sprite = currentSprite;
         legWaiting = false;
     }

@@ -27,6 +27,12 @@ public class DialogDriver : MonoBehaviour
     private string speaker;
     private List<(string, string)> queue = new List<(string, string)>();
     private bool isColliding;
+    public Transform storageTutPanel;
+    public Transform invTutPanel;
+    public Transform charTutPanel;
+    public Transform springTutPanel;
+    public Transform equipTutPanel;
+    public PlayerMovement playerMv;
 
     private void Start()
     {
@@ -216,6 +222,19 @@ public class DialogDriver : MonoBehaviour
         {
             queue.Add(("If I upgrade my legs with these springs I bet I could jump high and wide using [X]", "player"));
             queue.Add(("If I open my inventory with [i] I can equip them there.", "player"));
+            while (!Input.GetKeyDown(KeyCode.I)) {}
+            storageTutPanel.GetComponent<InvTutorial>().startBlink();
+            queue.Add(("This is my storage panel, it shows all the parts I can collect. I can access this in the main hub", "player"));
+            storageTutPanel.GetComponent<InvTutorial>().StopBlink();
+            invTutPanel.GetComponent<InvTutorial>().startBlink();
+            queue.Add(("These are the parts currently in my inventory, I can equip and use these whenever I want", "player"));
+            invTutPanel.GetComponent<InvTutorial>().StopBlink();
+            springTutPanel.GetComponent<InvTutorial>().startBlink();
+            equipTutPanel.GetComponent<InvTutorial>().startBlink();
+            queue.Add(("Looks like I can equip these springs by clicking them, then clicking on my Legs slot in the Character section", "player"));
+            springTutPanel.GetComponent<InvTutorial>().StopBlink();
+            equipTutPanel.GetComponent<InvTutorial>().StopBlink();
+            while (!playerMv.springsEquipped) {}
             go.SetActive(false);
         }
         else if (go.Equals(pickups[2]))//ARM PICKUP
