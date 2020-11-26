@@ -52,6 +52,8 @@ public class Teleport : MonoBehaviour
             {
                 teleportSound.Play();
                 GameObject.FindGameObjectWithTag("Player").transform.position = receiver.transform.position;
+                PlayerMovement pm = player.GetComponent<PlayerMovement>();
+                if (pm.inHub == true) { pm.setHub(false); }
             }
         } 
     }

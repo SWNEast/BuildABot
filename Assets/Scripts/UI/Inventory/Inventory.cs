@@ -23,12 +23,19 @@ public class Inventory : MonoBehaviour {
     public AudioSource jumpSound;
     public AudioSource ladderSound;
     public AudioSource teleportSound;
+    public AudioSource alertSound;
+    public AudioSource thudSound;
+    public AudioSource boulderRumble;
+    public AudioSource stepSound;
+    public AudioSource wheelsNoise;
+    public PlayerMovement player;
 
     private void Start() {
         menu.gameObject.SetActive(false);
         inventoryUI.gameObject.SetActive(false);
         panel.gameObject.SetActive(false);
         optionsMenu.gameObject.SetActive(false);
+        invCloseBtn.gameObject.SetActive(false);
         setVolumes();        
         giveItem(0);
         for (int i=1; i<itemList.items.Count; i++) {
@@ -61,14 +68,10 @@ public class Inventory : MonoBehaviour {
     }
 
     public void Update() {
-        if (Input.GetKeyDown(KeyCode.I)) {
-            openMenu.Play();
-            inventoryUI.gameObject.SetActive(!inventoryUI.gameObject.activeSelf);
-            panel.gameObject.SetActive(!panel.gameObject.activeSelf);
-            invOpenBtn.gameObject.SetActive(!invOpenBtn.gameObject.activeSelf);
-            invCloseBtn.gameObject.SetActive(!invCloseBtn.gameObject.activeSelf);
+        if (Input.GetKeyDown(KeyCode.I) && player.invAllowed) {
+            openCloseInventory();
         }
-        if (Input.GetKeyDown(KeyCode.Escape)) {
+        if (Input.GetKeyDown(KeyCode.Escape) && player.invAllowed) {
             openMenu.Play();
             if (inventoryUI.gameObject.activeSelf == false && optionsMenu.gameObject.activeSelf == false) {
                 menu.gameObject.SetActive(!menu.gameObject.activeSelf);
@@ -97,5 +100,20 @@ public class Inventory : MonoBehaviour {
         jumpSound.volume = (PlayerPrefs.GetFloat("SEVolume")/2);
         ladderSound.volume = PlayerPrefs.GetFloat("SEVolume");
         teleportSound.volume = PlayerPrefs.GetFloat("SEVolume");
+        alertSound.volume = PlayerPrefs.GetFloat("SEVolume");
+        thudSound.volume = PlayerPrefs.GetFloat("SEVolume");
+        boulderRumble.volume = PlayerPrefs.GetFloat("SEVolume");
+        stepSound.volume = PlayerPrefs.GetFloat("SEVolume");
+        wheelsNoise.volume = PlayerPrefs.GetFloat("SEVolume");
+    }
+
+    public void openCloseInventory() {
+        if (player.invAllowed) {
+            openMenu.Play();
+            inventoryUI.gameObject.SetActive(!inventoryUI.gameObject.activeSelf);
+            panel.gameObject.SetActive(!panel.gameObject.activeSelf);
+            invOpenBtn.gameObject.SetActive(!invOpenBtn.gameObject.activeSelf);
+            invCloseBtn.gameObject.SetActive(!invCloseBtn.gameObject.activeSelf);
+        }
     }
 }

@@ -108,7 +108,7 @@ public class UIItem : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler,
                 inHub = true;
                 UpdateItem(this.item);
             } else   
-                locked = true;
+                inHub = false;
         }
     }
 }

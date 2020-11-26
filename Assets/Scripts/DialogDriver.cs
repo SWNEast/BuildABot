@@ -34,6 +34,11 @@ public class DialogDriver : MonoBehaviour
     public Transform equipTutPanel;
     public PlayerMovement playerMv;
     private bool checkInvTut = false;
+    public AudioSource alert;
+    public AudioSource thud;
+    public AudioSource click;
+    public Transform invBtnTut;
+    public AudioSource boulder;
 
     private void Start()
     {
@@ -55,6 +60,7 @@ public class DialogDriver : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.V) && speaking)
         {
+            click.Play();
             speaking = false;
             player.GetComponent<PlayerMovement>().setMovement(true);
             Hide();
@@ -186,6 +192,7 @@ public class DialogDriver : MonoBehaviour
         }
         else if (go.Equals(dialogTriggers[10]))//AFTER ESCAPING BOULDER
         {
+            boulder.Stop();
             queue.Add(("Whew that was close. Come, we're almost there.", "bart"));
 
             go.SetActive(false);
@@ -196,7 +203,7 @@ public class DialogDriver : MonoBehaviour
             queue.Add(("Based on how hard it was to get here I have a feeling you'll need some extra parts.", "bart"));
             queue.Add(("Explore this facility and see what you can find. I'll wait here.", "bart"));
             queue.Add(("Store any parts you don't need in the hub. You can only carry 3 extra parts with you.", "bart"));
-            playerMv.inHub = true;
+            playerMv.setHub(true);
             go.SetActive(false);
         }
         else if (go.Equals(dialogTriggers[12]))//AT FIRST CHECKPOINT
@@ -229,7 +236,8 @@ public class DialogDriver : MonoBehaviour
         else if (go.Equals(pickups[1]))//SPRING PICKUP
         {
             queue.Add(("If I upgrade my legs with these springs I bet I could jump high and wide using [X]", "player"));
-            queue.Add(("If I open my inventory with [i] I can equip them there.", "player"));
+            queue.Add(("If I open my inventory with [I] I can equip them there.", "player"));
+            //invBtnTut.GetComponent<InvTutorial>().startBlink();
             checkInvTut = true;
             go.SetActive(false);
         }
@@ -291,8 +299,12 @@ public class DialogDriver : MonoBehaviour
 
     void CheckSpecialAction(string line)
     {
-        if (line == "*thud*")
+        if (line == "Can you hear me now?") {
+            alert.Play();
+        }
+        else if (line == "*thud*")
         {
+            thud.Play();
             StartCoroutine(FadeIn());
         }
         else if (line == "Hi! I’m Bart, thanks to me you can now see and hear! You seem somewhat capable. Follow me!")
@@ -302,11 +314,13 @@ public class DialogDriver : MonoBehaviour
         }
         else if (line == "What are you doing down there? Come on we have to go!")
         {
+            alert.Play();
             bart.GetComponent<SpriteRenderer>().flipX = true;
 
         }
         else if (line == "I should be able to climb the stairs now.")
         {
+            alert.Play();
             bart.GetComponent<SpriteRenderer>().flipX = false;
             bart.GetComponent<Bart>().SetTarget(new Vector2(92.5f, -2.5f));
         }
@@ -316,6 +330,7 @@ public class DialogDriver : MonoBehaviour
         }
         else if (line == "Are you stuck again!")
         {
+            alert.Play();
             bart.GetComponent<SpriteRenderer>().flipX = true;
         }
         else if (line == "I'll do the heavy lifting once more but this is the last time!")
@@ -323,7 +338,7 @@ public class DialogDriver : MonoBehaviour
             Debug.Log("Throw Springs");
             StartCoroutine(ThrowItem(pickups[1], -1, 7));
         }
-        else if (line == "If I open my inventory with [i] I can equip them there.")
+        else if (line == "If I open my inventory with [I] I can equip them there.")
         {
             bart.GetComponent<SpriteRenderer>().flipX = false;
             bart.GetComponent<Bart>().SetTarget(new Vector2(129.5f, -2.5f));
@@ -334,6 +349,7 @@ public class DialogDriver : MonoBehaviour
         }
         else if (line == "Finally... Right then, come along.")
         {
+            alert.Play();
             bart.GetComponent<Bart>().SetFollowing(true);
         }
         else if (line == "Explore this facility and see what you can find. I'll wait here.")
@@ -342,6 +358,7 @@ public class DialogDriver : MonoBehaviour
         }
         else if (line == "RUN!!!")
         {
+            alert.Play();
             boulderBlock.GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, 0);
             //boulderBlock.SetActive(false);
             //boulderTrigger.SetActive(false);
@@ -357,8 +374,51 @@ public class DialogDriver : MonoBehaviour
             invTutPanel.GetComponent<InvTutorial>().StopBlink();
             charTutPanel.GetComponent<InvTutorial>().startBlink();
         }
-        else if (line == "Let's equip the springs into my legs panel, then we should be ready to go!") {
+        else if (line == "Let's equip the springs into my legs panel, then close our inventory with [I] and we'll be all set!") {
             charTutPanel.GetComponent<InvTutorial>().StopBlink();
+        }
+        else if (line == "Right, just up here we go") {
+            alert.Play();
+        }
+        else if (line == "We need to cross that gap.") {
+            alert.Play();
+        }
+        else if (line == "Hey, wait up") {
+            alert.Play();
+        }
+        else if (line == "What was that???") {
+            alert.Play();
+            boulder.Play();
+        }
+        else if (line == "Whew that was close. Come, we're almost there.") {
+            alert.Play();
+        }
+        else if (line == "I really need help with a top secret quest and I <i> thought </i> you were the perfect bot to help me.") {
+            alert.Play();
+        }
+        else if (line == "A Checkpoint. These will come in handy if I die.") {
+            alert.Play();
+        }
+        else if (line == "Mmmm this looks like a Teleport Receiver. I wonder where the sender is...") {
+            alert.Play();
+        }
+        else if (line == "Ah, this should send be back to the receiver if I activate it with [UP].") {
+            alert.Play();
+        }
+        else if (line == "This could be challenging...") {
+            alert.Play();
+        }
+        else if (line == "If I upgrade my legs with these springs I bet I could jump high and wide using [X]") {
+            alert.Play();
+        }
+        else if (line == "These should help me get up that ladder using [UP]...") {
+            alert.Play();
+        }
+        else if (line == "Magnets on my hands? Prehaps I could cling onto the ceiling by pressing [C]") {
+            alert.Play();
+        }
+        else if (line == "I can move super fast with these wheels by holding [X]. Woah, is that a jump?") {
+            alert.Play();
         }
     }
 
@@ -421,10 +481,11 @@ public class DialogDriver : MonoBehaviour
     }
 
     private void inventoryTutorial() {
+        //invBtnTut.GetComponent<InvTutorial>().StopBlink();
         isColliding = true;
         queue.Add(("This is my storage panel, it shows all the parts I can collect. I can access this in the main hub", "player"));
         queue.Add(("These are the parts currently in my inventory, I can equip and use these whenever I want", "player"));
         queue.Add(("Placing parts here equips them, and allows me to use their abilities", "player"));
-        queue.Add(("Let's equip the springs into my legs panel, then we should be ready to go!", "player"));
+        queue.Add(("Let's equip the springs into my legs panel, then close our inventory with [I] and we'll be all set!", "player"));
     }
 }

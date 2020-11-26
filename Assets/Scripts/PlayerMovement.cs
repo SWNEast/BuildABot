@@ -65,6 +65,11 @@ public class PlayerMovement : MonoBehaviour
     public GameObject invBox;
     public bool inHub = false;
     public UIInventory inventoryUI;
+    public bool invAllowed = true;
+    public AudioSource step;
+    private int stepPlay = 0;
+    public AudioSource wheelsSound;
+    public Transform returnBtn;
 
     private void Start()
     {
@@ -79,7 +84,9 @@ public class PlayerMovement : MonoBehaviour
         //boulderBlock = GameObject.FindGameObjectWithTag("Boulder Block");
         //boulderTrigger = GameObject.FindGameObjectWithTag("Boulder Trigger");
         boulderSpawn = boulder.transform.position;
+        step.volume = 0.4f;
 
+        returnBtn.gameObject.SetActive(false);
         //tutPanel1.gameObject.SetActive(false);
         //tutPanel2.gameObject.SetActive(false);
     }
@@ -141,7 +148,7 @@ public class PlayerMovement : MonoBehaviour
             {
                 if (magnetsEquipped)
                 {
-                    magnetNoise.Play();
+                    
                     Magnet();
                 }
             } 
@@ -250,11 +257,12 @@ public class PlayerMovement : MonoBehaviour
             NewItemAnimation();
         } else if (go.CompareTag("Checkpoint"))
         {
-            checkpointNoise.Play();
+            
             if (lastCheckpointSprite != null)
             {
                 lastCheckpointSprite.sprite = offFlagSprite;
             }
+            if ((lastCheckpoint != null && !lastCheckpoint.Equals(go.transform.position)) || lastCheckpoint == null) { checkpointNoise.Play(); }
             lastCheckpoint = go.transform.position;
             go.GetComponent<SpriteRenderer>().sprite = onFlagSprite;
             lastCheckpointSprite = go.GetComponent<SpriteRenderer>();
@@ -400,24 +408,31 @@ public class PlayerMovement : MonoBehaviour
         {
             if (magnetOn) //Magnet on
             {
+                magnetNoise.Play();
+                invAllowed = true;
                 magnetOn = false;
                 rb.gravityScale = 1.0f;
                 //tipText.gameObject.SetActive(false);
             }
             else
             {
+                magnetNoise.Play();
+                invAllowed = false;
                 magnetOn = true;
                 rb.gravityScale = 0.0f;
                 rb.velocity = new Vector2(rb.velocity.x, 0.0f);
                 //tipText.gameObject.SetActive(true);
             }
         }
+        
     }
 
     void Sprint(bool isSprinting)
     {
         if (isSprinting)
-        {
+        {   
+            wheelsSound.Play();
+            invAllowed = false;
             speedBoost = baseSpeed;
             if (onRamp && PlayerIsOnSlope())
             {
@@ -427,8 +442,11 @@ public class PlayerMovement : MonoBehaviour
             }
         } else
         {
+            wheelsSound.Stop();
             speedBoost = 0;
+            invAllowed = true;
         }
+        
     }
 
     void UpdateSprites()
@@ -511,8 +529,12 @@ public class PlayerMovement : MonoBehaviour
 
     IEnumerator NextLeg(int indexModifier)
     {
+        
         legWaiting = true;
         yield return new WaitForSeconds(legWaitTime);
+        if (stepPlay == 0) { step.Play(); }
+        stepPlay = stepPlay + 1;
+        if (stepPlay == 3) { stepPlay = 0; }
         legIndex += 1;
         if (legIndex == 4)
         {
@@ -556,7 +578,17 @@ public class PlayerMovement : MonoBehaviour
         inHub = true;
         inventoryUI.openHub();
         for (int i = 18; i < 21; i ++) { equipped.EquipItem(null, i); }
-            
+    }
+
+    public void setHub(bool inHub) {
+        if (inHub) {
+            returnBtn.gameObject.SetActive(true);
+            inventoryUI.openHub();
+            for (int i = 18; i < 21; i ++) { equipped.EquipItem(null, i); }
+        } else{
+            inventoryUI.closeHub();
+        }
+        this.inHub = inHub;
     }
 
 
