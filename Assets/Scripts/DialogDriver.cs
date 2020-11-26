@@ -324,7 +324,7 @@ public class DialogDriver : MonoBehaviour
         }
         else if (line == "Explore this facility and see what you can find. I'll wait here.")
         {
-            StartCoroutine(PanCamera(10, 75, 1.5f, 1));
+            StartCoroutine(PanCamera(10, 68, 1.5f, 1));
         }
         else if (line == "What was that???")
         {
