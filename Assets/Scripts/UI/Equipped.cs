@@ -10,6 +10,14 @@ public class Equipped : MonoBehaviour {
     public Transform legsPanel;
     public Transform armsPanel;
 
+    public Transform bodyHighlight;
+    public Transform legsHighlight;
+    public Transform armsHighlight;
+
+    public GameObject player;
+    private PlayerMovement pm;
+    private bool holding = false;
+
     public void EquipItem(Item item, int bodyPart) {
         Image image = null;
         if (bodyPart == 18) { image = bodyPanel.gameObject.GetComponent<Image>(); }
@@ -38,5 +46,56 @@ public class Equipped : MonoBehaviour {
                 if (i.id == id) { return true; }
         }
         return false;
+    }
+
+
+    private void Start()
+    {
+        pm = player.GetComponent<PlayerMovement>();
+        bodyHighlight.GetComponent<Image>().color = new Color(1, 1, 1, 0);
+        legsHighlight.GetComponent<Image>().color = new Color(1, 1, 1, 0);
+        armsHighlight.GetComponent<Image>().color = new Color(1, 1, 1, 0);
+    }
+
+
+    private void Update()
+    {
+        if (pm.GetSprinting())
+        {
+            legsHighlight.GetComponent<Image>().color = new Color(1, 1, 1, 1);
+        }
+        else if (pm.GetJumping())
+        {
+            legsHighlight.GetComponent<Image>().color = new Color(1, 1, 1, 1);
+            StartCoroutine(WaitForKeyRelease(KeyCode.X, legsHighlight.GetComponent<Image>()));
+        } 
+        else if (!holding)
+        {
+            legsHighlight.GetComponent<Image>().color = new Color(1, 1, 1, 0);
+        }
+
+        if (pm.GetMagnetOn())
+        {
+            armsHighlight.GetComponent<Image>().color = new Color(1, 1, 1, 1);
+        }
+        else
+        {
+            armsHighlight.GetComponent<Image>().color = new Color(1, 1, 1, 0);
+        }
+    }
+
+    IEnumerator WaitForKeyRelease(KeyCode key, Image highlight)
+    {
+        holding = true;
+        Rigidbody2D rb = player.GetComponent<Rigidbody2D>();
+        Debug.Log("waiting");
+        yield return new WaitForSeconds(0.1f);
+        while (!Input.GetKeyUp(key) && rb.velocity.y >= 0 && !pm.GetMagnetOn()){
+            yield return new WaitForSeconds(0.1f);
+        }
+        Debug.Log("released");
+        holding = false;
+        highlight.color = new Color(1, 1, 1, 0);
+
     }
 }

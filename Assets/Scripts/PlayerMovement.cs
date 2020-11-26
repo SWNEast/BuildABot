@@ -47,6 +47,7 @@ public class PlayerMovement : MonoBehaviour
     private bool canMagnet = false;
     private bool magnetOn = false;
     private bool wheelsEquipped = false;
+    private bool sprinting = false;
     private float speedBoost = 0;
     private bool onRamp = false;
     public GameObject boulder;
@@ -416,6 +417,7 @@ public class PlayerMovement : MonoBehaviour
 
     void Sprint(bool isSprinting)
     {
+        sprinting = isSprinting;
         if (isSprinting)
         {
             speedBoost = baseSpeed;
@@ -549,5 +551,20 @@ public class PlayerMovement : MonoBehaviour
     public bool getFacingRight()
     {
         return facingRight;
+    }
+
+    public bool GetSprinting()
+    {
+        return sprinting;
+    }
+
+    public bool GetJumping()
+    {
+        return jumping;
+    }
+
+    public bool GetMagnetOn()
+    {
+        return magnetOn;
     }
 }
