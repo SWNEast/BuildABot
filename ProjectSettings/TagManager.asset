@@ -35,7 +35,7 @@ TagManager:
   - Ground
   - CameraBounds
   - Toolips
-  - 
+  - Background
   - 
   - 
   - 
@@ -59,4 +59,10 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Background_1
+    uniqueID: 2615578717
+    locked: 0
+  - name: New Layer
+    uniqueID: 1243008667
     locked: 0

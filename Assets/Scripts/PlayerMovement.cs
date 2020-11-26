@@ -47,6 +47,7 @@ public class PlayerMovement : MonoBehaviour
     private bool canMagnet = false;
     private bool magnetOn = false;
     private bool wheelsEquipped = false;
+    private bool sprinting = false;
     private float speedBoost = 0;
     private bool onRamp = false;
     public GameObject boulder;
@@ -429,6 +430,7 @@ public class PlayerMovement : MonoBehaviour
 
     void Sprint(bool isSprinting)
     {
+        sprinting = isSprinting;
         if (isSprinting)
         {   
             wheelsSound.Play();
@@ -573,6 +575,7 @@ public class PlayerMovement : MonoBehaviour
         return facingRight;
     }
 
+
     public void backToHub() {
         this.gameObject.transform.position = new Vector3(287.97f, -2.93f, 0f);
         inHub = true;
@@ -592,4 +595,19 @@ public class PlayerMovement : MonoBehaviour
     }
 
 
+
+    public bool GetSprinting()
+    {
+        return sprinting;
+    }
+
+    public bool GetJumping()
+    {
+        return jumping;
+    }
+
+    public bool GetMagnetOn()
+    {
+        return magnetOn;
+    }
 }

@@ -22,6 +22,7 @@ public class DialogDriver : MonoBehaviour
     public CinemachineVirtualCamera playerCamera;
     public GameObject boulderBlock;
     public GameObject boulderTrigger;
+    public Sprite boulderBlockCracked;
     private bool speaking;
     private bool flashing;
     private string speaker;
@@ -354,7 +355,11 @@ public class DialogDriver : MonoBehaviour
         }
         else if (line == "Explore this facility and see what you can find. I'll wait here.")
         {
-            StartCoroutine(PanCamera(12, 80, 3, 1));
+            StartCoroutine(PanCamera(10, 68, 1.5f, 1));
+        }
+        else if (line == "What was that???")
+        {
+            boulderBlock.GetComponent<SpriteRenderer>().sprite = boulderBlockCracked;
         }
         else if (line == "RUN!!!")
         {
@@ -434,6 +439,7 @@ public class DialogDriver : MonoBehaviour
 
             yield return null;
         }
+        blackScreen.gameObject.SetActive(false);
     }
 
     IEnumerator ThrowItem(GameObject item, float direction, float throwSpeed)
