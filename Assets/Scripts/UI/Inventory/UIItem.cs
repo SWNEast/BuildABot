@@ -12,6 +12,7 @@ public class UIItem : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler,
     private int slot = 999;
     public Equipped equipped;
     public AudioSource click;
+    public PlayerMovement player;
     private bool locked = false;
     private bool inHub = false;
 
@@ -23,7 +24,7 @@ public class UIItem : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler,
         tooltip = GameObject.Find("Tooltip").GetComponent<Tooltip>();
         equipped = GameObject.Find("Equipped Master Panel").GetComponent<Equipped>();
         click = GameObject.Find("Click Sound").GetComponent<AudioSource>();
-        //if (slot < 15 || this.item.id <= 4) { locked = true; }
+        player = GameObject.Find("Player").GetComponent<PlayerMovement>();
     }
 
     // Assign the new item when updating, if given null show nothing
@@ -46,7 +47,7 @@ public class UIItem : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler,
     public void OnPointerClick(PointerEventData eventData) {
         click.Play();
         if (this.item != null) {                                // If the player clicks on an actual item:
-            if ((inHub && item.id > 4) || (!inHub && item.id > 4 && slot >= 15)) {
+            if ((item.id > 4 && slot >= 15) || (inHub && item.id > 4 && (item.id % 2 == 0))) {
                 if (selectedItem.item != null) {                        // If there was already a selected item, clone it and replace it with the item clicked on
                     Item clone = new Item(selectedItem.item);                           // Puts the cloned item in the place of where the old item used to be
                     if (this.slot >= 18) { 
@@ -67,7 +68,6 @@ public class UIItem : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler,
                     }
                     selectedItem.UpdateItem(this.item);             // If there wasn't a selected item, just select this item and replace it with nothing
                     UpdateItem(null);
-                    
                 }
             }
         } else if (selectedItem.item != null) {                 // If there was no item in the slot, drop the selected item in said place
@@ -77,7 +77,7 @@ public class UIItem : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler,
                     equipped.EquipItem(selectedItem.item, slot);
                     selectedItem.UpdateItem(null);
                 }
-            } else if (slot >= 15 && slot <= 17) {
+            } else if ((slot >= 15 && slot <= 17) || (inHub)) {
                 int tempSlot = selectedItem.slot;
                 UpdateItem(selectedItem.item);
                 //selectedItem.SetSlot(tempSlot);
@@ -104,7 +104,7 @@ public class UIItem : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler,
 
     void Update() {
         if (slot < 15) {
-            if (equipped.inHub()) {
+            if (player.inHub) {
                 inHub = true;
                 UpdateItem(this.item);
             } else   

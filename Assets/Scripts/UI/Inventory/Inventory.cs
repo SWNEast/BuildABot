@@ -42,7 +42,7 @@ public class Inventory : MonoBehaviour {
         Item found = itemList.items[id];
         if (toRemove != null) {
             characterItems.Remove(toRemove);
-            Debug.Log("Removed item " + toRemove.title);
+            //Debug.Log("Removed item " + toRemove.title);
             if (found != null) { inventoryUI.ReplaceItem(toRemove, found); }
             else { inventoryUI.RemoveItem(toRemove); }
         }if (id > 4 && !characterItems.Contains(found)) { giveItem(id); }
@@ -52,7 +52,7 @@ public class Inventory : MonoBehaviour {
     private void giveItem(int id) {
         Item foundItem = itemList.getItem(id);
         characterItems.Add(foundItem);
-        Debug.Log("Added item " + foundItem.title);
+        //Debug.Log("Added item " + foundItem.title);
         inventoryUI.AddItem(foundItem);
     }
 

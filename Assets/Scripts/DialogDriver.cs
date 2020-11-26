@@ -353,14 +353,12 @@ public class DialogDriver : MonoBehaviour
             storageTutPanel.GetComponent<InvTutorial>().StopBlink();
             invTutPanel.GetComponent<InvTutorial>().startBlink();
         }
-        else if (line == "Looks like I can equip these springs by clicking them, then clicking on my Legs slot in the Character section") {
+        else if (line == "Placing parts here equips them, and allows me to use their abilities") {
             invTutPanel.GetComponent<InvTutorial>().StopBlink();
-            springTutPanel.GetComponent<InvTutorial>().startBlink();
-            equipTutPanel.GetComponent<InvTutorial>().startBlink();
+            charTutPanel.GetComponent<InvTutorial>().startBlink();
         }
-        else if (line == "Ahh, now I feel ready to jump! I just need to close my inventory and I'm all set!") {
-            springTutPanel.GetComponent<InvTutorial>().StopBlink();
-            equipTutPanel.GetComponent<InvTutorial>().StopBlink();
+        else if (line == "Let's equip the springs into my legs panel, then we should be ready to go!") {
+            charTutPanel.GetComponent<InvTutorial>().StopBlink();
         }
     }
 
@@ -426,7 +424,7 @@ public class DialogDriver : MonoBehaviour
         isColliding = true;
         queue.Add(("This is my storage panel, it shows all the parts I can collect. I can access this in the main hub", "player"));
         queue.Add(("These are the parts currently in my inventory, I can equip and use these whenever I want", "player"));
-        queue.Add(("Looks like I can equip these springs by clicking them, then clicking on my Legs slot in the Character section", "player"));
-        queue.Add(("Ahh, now I feel ready to jump! I just need to close my inventory and I'm all set!", "player"));
+        queue.Add(("Placing parts here equips them, and allows me to use their abilities", "player"));
+        queue.Add(("Let's equip the springs into my legs panel, then we should be ready to go!", "player"));
     }
 }

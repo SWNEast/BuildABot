@@ -64,6 +64,7 @@ public class PlayerMovement : MonoBehaviour
     //public Transform tutPanel2;
     public GameObject invBox;
     public bool inHub = false;
+    public UIInventory inventoryUI;
 
     private void Start()
     {
@@ -552,5 +553,11 @@ public class PlayerMovement : MonoBehaviour
 
     public void backToHub() {
         this.gameObject.transform.position = new Vector3(287.97f, -2.93f, 0f);
+        inHub = true;
+        inventoryUI.openHub();
+        for (int i = 18; i < 21; i ++) { equipped.EquipItem(null, i); }
+            
     }
+
+
 }

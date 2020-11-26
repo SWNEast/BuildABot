@@ -74,4 +74,56 @@ public class UIInventory : MonoBehaviour {
         UpdateSlot(uiItems.FindIndex(i => i.item == oldItem), newItem);
 
     }
+
+    public void openHub() {
+        for (int i = 0; i < 3; i ++) {
+            Transform storagePanel = storagePanelParent.GetChild(i);
+            storagePanel.GetComponent<Image>().color = Color.white;
+        }
+        for (int i = 0; i < 4; i ++) { 
+            Transform storagePanel = storagePanelBody.GetChild(i);
+            storagePanel.GetComponent<Image>().color = Color.white;
+        }
+        for (int i = 0; i < 4; i ++) { 
+            Transform storagePanel = storagePanelLegs.GetChild(i);
+            storagePanel.GetComponent<Image>().color = Color.white;
+        }
+        for (int i = 0; i < 4; i ++) { 
+            Transform storagePanel = storagePanelArms.GetChild(i);
+            storagePanel.GetComponent<Image>().color = Color.white;
+        }unEquipAll();
+    }
+
+    public void closeHub() {
+        for (int i = 0; i < 3; i ++) {
+            Transform storagePanel = storagePanelParent.GetChild(i);
+            storagePanel.GetComponent<Image>().color = Color.gray;
+        }
+        for (int i = 0; i < 4; i ++) { 
+            Transform storagePanel = storagePanelBody.GetChild(i);
+            storagePanel.GetComponent<Image>().color = Color.gray;
+        }
+        for (int i = 0; i < 4; i ++) { 
+            Transform storagePanel = storagePanelLegs.GetChild(i);
+            storagePanel.GetComponent<Image>().color = Color.gray;
+        }
+        for (int i = 0; i < 4; i ++) { 
+            Transform storagePanel = storagePanelArms.GetChild(i);
+            storagePanel.GetComponent<Image>().color = Color.gray;
+        }
+    }
+
+    public void unEquipAll() {
+        for (int i = 0; i < 3; i ++) {
+            Transform panel = invPanel.GetChild(i);
+            Debug.Log(panel + " " + panel.GetComponentInChildren<UIItem>());
+            UIItem item = panel.GetComponentInChildren<UIItem>();
+            item.UpdateItem(null);
+        }
+        for (int i = 0; i < 3; i ++) {
+            Transform panel = charPanel.GetChild(i);
+            UIItem item = panel.GetComponentInChildren<UIItem>();
+            item.UpdateItem(null);
+        }
+    }
 }
