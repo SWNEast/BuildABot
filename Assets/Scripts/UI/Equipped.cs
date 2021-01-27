@@ -20,7 +20,7 @@ public class Equipped : MonoBehaviour {
 
     public void EquipItem(Item item, int bodyPart) {
         Image image = null;
-        if (bodyPart == 18) { image = bodyPanel.gameObject.GetComponent<Image>(); }
+        /*if (bodyPart == 18) { image = bodyPanel.gameObject.GetComponent<Image>(); }
         else if (bodyPart == 19) { image = legsPanel.gameObject.GetComponent<Image>(); }
         else if (bodyPart == 20) { image = armsPanel.gameObject.GetComponent<Image>(); }
 
@@ -37,7 +37,7 @@ public class Equipped : MonoBehaviour {
             image.sprite = spr;
         } else {
             image.color = Color.clear;
-        }
+        }*/
     }
 
     public bool isEquipped(int id) {
